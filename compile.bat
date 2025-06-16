@@ -1,0 +1,1 @@
+gcc -o Natolin ./src/*.c -I./include/ -IC:/raylib/raylib/src/
