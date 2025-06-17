@@ -10,10 +10,10 @@ unsigned int font_list_len;
 
 void FontsLoad() {
     font_list = (FontData []){
-        (FontData){&Haettenschweiler, "HATTEN"}
+        {&Haettenschweiler, "HATTEN"}
     };
 
-    font_list_len = ARRAYSIZE(*font_list, FontData);
+    font_list_len = ARRAYSIZE(font_list, FontData);
     for (int i=0; i < font_list_len; i++) {
         *font_list[i]._font = LoadFontEx(TextFormat(
             "%s%s%s", "assets/fonts/", font_list[i]._name, ".ttf"), DEFAULT_FONT_SIZE, NULL, 0);
