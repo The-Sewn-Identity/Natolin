@@ -5,23 +5,29 @@
 #include "util.h"
 
 Font Haettenschweiler;
-FontData * font_list;
-unsigned int font_list_len;
+Font DokChampa;
+FontData * fl_ptr;
+unsigned int * font_list_len;
 
 void FontsLoad() {
-    font_list = (FontData []){
-        {&Haettenschweiler, "HATTEN"}
+    FontData font_list[] = {
+        {&Haettenschweiler, "HATTEN"},
+        {&DokChampa, "dokchampa"},
     };
+    unsigned int length = ARRAYSIZE(font_list);
+    font_list_len = &length;
+    fl_ptr = font_list;
 
-    font_list_len = ARRAYSIZE(font_list, FontData);
-    for (int i=0; i < font_list_len; i++) {
-        *font_list[i]._font = LoadFontEx(TextFormat(
-            "%s%s%s", "assets/fonts/", font_list[i]._name, ".ttf"), DEFAULT_FONT_SIZE, NULL, 0);
+    for (int i=0; i < *font_list_len; i++) {
+        *fl_ptr[i]._font = LoadFontEx(TextFormat(
+            "%s%s%s", "assets/fonts/", fl_ptr[i]._name, ".ttf"), DEFAULT_FONT_SIZE, NULL, 0);
     }
 }
 
 void FontsUnload() {
-    for (int i=0; i < font_list_len; i++) {
-        UnloadFont(*font_list[i]._font);
+    for (int i=0; i < *font_list_len; i++) {
+        UnloadFont(*fl_ptr[i]._font);
+        FREEPTR(fl_ptr[i]._font);
+        FREEPTR(fl_ptr[i]._name);
     }
 }

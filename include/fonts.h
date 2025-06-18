@@ -10,6 +10,7 @@ typedef struct FontData {
 } FontData;
 
 extern Font Haettenschweiler;
+extern Font DokChampa;
 void FontsLoad();
 void FontsUnload();
 
