@@ -1,1 +1,1 @@
-gcc -o Natolin ./src/*.c -I./include/ -L/usr/include/ -lraylib
+gcc -Wall -o Natolin ./src/*.c -I./include/ -L/usr/include/ -lraylib

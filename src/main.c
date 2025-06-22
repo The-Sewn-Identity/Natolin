@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <raylib.h>
 #include "menu.h"
 #include "conf.h"
@@ -8,13 +9,12 @@ int main() {
     MenuLoad();
     Color default_fill_color = PAXGREEN;
     bool launched = false;
-
+    
     while (!WindowShouldClose()) {
         BeginDrawing();
             ClearBackground(default_fill_color);
             if (IsKeyDown(KEY_L)) { MenuDraw(); }
             if (IsKeyPressed(KEY_T) && !launched) {
-                
             }
         EndDrawing();
     };

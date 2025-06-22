@@ -1,1 +1,1 @@
-gcc -o Natolin ./src/*.c -I./include/ -IC:/raylib/raylib/src/
+gcc -Wall -o Natolin ./src/*.c -I./include/ -I"C:/raylib/raylib/src/" -L"C:/raylib/raylib/src/" -I"C:/Libraries/LSLReader/" -L"C:/Libraries/LSLReader/" -lraylib -lgdi32 -lwinmm -llslread
