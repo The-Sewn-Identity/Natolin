@@ -1,10 +1,10 @@
 #include <raylib.h>
+#include "levels.h"
 #include "conf.h"
 #include "fonts.h"
-#include "levels.h"
 
 void RaylibInitialize() {
-    // LoadLevels();
+    LoadLevels();
 
     SetConfigFlags(FLAG_MSAA_4X_HINT || FLAG_FULLSCREEN_MODE);
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TITLE);

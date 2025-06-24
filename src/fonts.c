@@ -6,6 +6,7 @@
 
 Font Haettenschweiler;
 Font DokChampa;
+Font Zaklad;
 FontData * fl_ptr;
 unsigned int * font_list_len;
 
@@ -13,6 +14,7 @@ void FontsLoad() {
     FontData font_list[] = {
         {&Haettenschweiler, "HATTEN"},
         {&DokChampa, "dokchampa"},
+        {&Zaklad, "Zaklad-Regular"}
     };
     unsigned int length = ARRAYSIZE(font_list);
     font_list_len = &length;

@@ -10,7 +10,7 @@ Vector2 textlen;
 
 void MenuLoad() {
     logo = LoadTexture("assets/textures/logos/Natolin_logo.png");
-    textlen =  MeasureTextEx(Haettenschweiler, SUBTITLE, 48, 1);
+    textlen =  MeasureTextEx(Zaklad, SUBTITLE, 48, 1);
 }
 
 void MenuUnload() {
@@ -19,6 +19,6 @@ void MenuUnload() {
 
 void MenuDraw() {
     DrawTexture(logo, SCREEN_WIDTH / 2 - logo.width / 2, 0, WHITE);
-    DrawTextEx(Haettenschweiler, SUBTITLE,
+    DrawTextEx(Zaklad, SUBTITLE,
         (Vector2){SCREEN_WIDTH / 2 - textlen.x/2, SCREEN_HEIGHT / 3}, 48, 1, WHITE);
 }
