@@ -28,8 +28,6 @@ void FontsLoad() {
 
 void FontsUnload() {
     for (int i=0; i < *font_list_len; i++) {
-        UnloadFont(*fl_ptr[i]._font);
-        FREEPTR(fl_ptr[i]._font);
-        FREEPTR(fl_ptr[i]._name);
+        // UnloadFont(*fl_ptr[i]._font);
     }
 }
