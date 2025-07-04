@@ -3,7 +3,7 @@
 #include "conf.h"
 #include "fonts.h"
 
-void RaylibInitialize() {
+void RaylibInitialize(void) {
     LoadLevels();
 
     SetConfigFlags(FLAG_MSAA_4X_HINT || FLAG_FULLSCREEN_MODE);
@@ -13,7 +13,7 @@ void RaylibInitialize() {
     FontsLoad();
 }
 
-void RaylibDeinitialize() {
+void RaylibDeinitialize(void) {
     FontsUnload();
     CloseWindow();
 }

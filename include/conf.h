@@ -8,7 +8,7 @@
 
 #define DEFAULT_FPS 120
 
-void RaylibInitialize();
-void RaylibDeinitialize();
+void RaylibInitialize(void);
+void RaylibDeinitialize(void);
 
 #endif

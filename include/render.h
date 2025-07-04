@@ -4,11 +4,18 @@
 #include <raylib.h>
 #include <lslread.h>
 
-typedef Texture2D LSL_Texture_Container[64][128];
+typedef struct TextureDef {
+    short int index;
+    Texture2D tex;
+    short int x_pos;
+    short int y_pos;
+} TextureDef;
 
-LSL_Texture_Container * CreateLSLTextCont(LSL_Layout * layout);
+typedef TextureDef LSL_Texture_Container[16][64];
 
-void RenderLSL(LSL_Texture_Container * tex_cont);
-void FreeLSLTextCont(LSL_Texture_Container * tex_cont);
+void CreateLSLTexCont(LSL_Texture_Container tex_cont, LSL_Layout layout);
+
+void RenderLSL(LSL_Texture_Container tex_cont);
+void FreeLSLTextCont(LSL_Texture_Container tex_cont);
 
 #endif

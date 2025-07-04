@@ -3,12 +3,8 @@
 
 #include <lslread.h>
 
-typedef struct LSL_Level_Container {
+extern LSL_Layout level_01;
 
-} LSL_Level_Container;
-
-extern LSL_Layout * level_01;
-
-void LoadLevels();
+void LoadLevels(void);
 
 #endif

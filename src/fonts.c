@@ -10,7 +10,7 @@ Font Zaklad;
 FontData * fl_ptr;
 unsigned int * font_list_len;
 
-void FontsLoad() {
+void FontsLoad(void) {
     FontData font_list[] = {
         {&Haettenschweiler, "HATTEN"},
         {&DokChampa, "dokchampa"},
@@ -26,7 +26,7 @@ void FontsLoad() {
     }
 }
 
-void FontsUnload() {
+void FontsUnload(void) {
     for (int i=0; i < *font_list_len; i++) {
         // UnloadFont(*fl_ptr[i]._font);
     }
