@@ -1,5 +1,5 @@
 #include <raylib.h>
-#include "renderbox.h"
+#include "interface.h"
 #include "levels.h"
 #include "conf.h"
 #include "fonts.h"
@@ -11,14 +11,16 @@ void RaylibInitialize(void) {
     InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), TITLE);
     SetTargetFPS(DEFAULT_FPS);
 
-    CreateMainRenderBox();
+    CreatePlayBox();
+    CreateInterface();
 
     LoadTextureContainers();
     FontsLoad();
 }
 
 void RaylibDeinitialize(void) {
-    UnloadMainRenderBox();
+    UnloadPlayBox();
+    UnloadInterface();
     FontsUnload();
     CloseWindow();
 }

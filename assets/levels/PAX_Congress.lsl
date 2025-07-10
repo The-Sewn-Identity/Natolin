@@ -1,7 +1,7 @@
 PAX_01
 
 [0] {
-    0   THEATRE_BG    0,0
+    0   PAX_CONGRESS_THEATRE_BK    0,0
 };
 [3] {
     0   THEATRE_RAILINGb 192,160

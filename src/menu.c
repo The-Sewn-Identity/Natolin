@@ -1,6 +1,6 @@
 #include <string.h>
 #include <raylib.h>
-#include "renderbox.h"
+#include "interface.h"
 #include "util.h"
 #include "conf.h"
 #include "fonts.h"

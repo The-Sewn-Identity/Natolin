@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "player.h"
-#include "renderbox.h"
+#include "interface.h"
 
 #define SHORTDIR "assets/textures/player/%s/%s"
 

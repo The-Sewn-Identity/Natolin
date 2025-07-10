@@ -25,7 +25,7 @@ void FontsLoad(void) {
 }
 
 void FontsUnload(void) {
-    printf("%s", font_list[0]._name);
+    //printf("%s", font_list[0]._name);
     for (int i=0; i < font_list_len; i++) {
         UnloadFont(*font_list[i]._font);
     }

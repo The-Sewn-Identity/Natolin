@@ -3,7 +3,6 @@
 #include <string.h>
 #include <raylib.h>
 #include <lslread.h>
-#include "renderbox.h"
 #include "util.h"
 #include "levels.h"
 #include "render.h"
