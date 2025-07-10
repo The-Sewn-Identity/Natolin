@@ -3,6 +3,7 @@
 #include <string.h>
 #include <raylib.h>
 #include <lslread.h>
+#include "renderbox.h"
 #include "util.h"
 #include "levels.h"
 #include "render.h"
@@ -38,7 +39,10 @@ void RenderLSL(LSL_Texture_Container tex_cont) {
     for (int r=0; r < 16; r++) {
         for (int e=0; e < 64; e++) {
             if (IsTextureValid(tex_cont[r][e].tex)) { 
-                DrawTexture(tex_cont[r][e].tex, tex_cont[r][e].x_pos, tex_cont[r][e].y_pos, WHITE); 
+                DrawTexture(tex_cont[r][e].tex, 
+                    tex_cont[r][e].x_pos,
+                    tex_cont[r][e].y_pos,
+                    WHITE); 
             }
         }
     }

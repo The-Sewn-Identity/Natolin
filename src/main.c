@@ -3,25 +3,35 @@
 #include "conf.h"
 #include "colors.h"
 #include "levels.h"
-#include "render.h"
+#include "player.h"
+#include "renderbox.h"
 #include <stdio.h>
 
 int main(void) {
     RaylibInitialize();
     MenuLoad();
-    Color default_fill_color = PAXGREEN;
-    bool launched = false;
 
-    LSL_Texture_Container lev1;
-    CreateLSLTexCont(lev1, level_01);
+    Color default_fill_color = ZSL_LIME;
+    bool launched = true;
+
+    current_player = CreatePlayer();
     
     while (!WindowShouldClose()) {
+        if (launched) {
+            BeginTextureMode(renderbox);
+                ClearBackground(default_fill_color);
+                if (IsKeyPressed(KEY_T) && !launched) {
+                }
+                RenderLSL(*current_tex_cont);
+            EndTextureMode();
+        }
+            
         BeginDrawing();
-            ClearBackground(default_fill_color);
-            if (IsKeyDown(KEY_L)) { MenuDraw(); }
-            if (IsKeyPressed(KEY_T) && !launched) {
+            ClearBackground(PAXGREEN);
+            if (launched) {
+                DrawMainRenderBox();
             }
-            RenderLSL(lev1);
+            if (IsKeyDown(KEY_L)) { MenuDraw(); }
         EndDrawing();
     };
 
