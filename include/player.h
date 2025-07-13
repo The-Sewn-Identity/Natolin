@@ -8,6 +8,7 @@ typedef struct Player {
     char * lname;
     short int x_pos; // wahhh wahhh
     short int y_pos; 
+    unsigned short layer;
     short offset_x; // wehhh wehhhhh
     short offset_y;
     void (*ability)(struct Player *);
@@ -15,6 +16,7 @@ typedef struct Player {
 extern Player current_player;
 
 Player CreatePlayer(void);
+void UnloadPlayer(Player *__player);
 
 void AnimatePlayer(Player *__player);
 void Inspect(Player *__player);

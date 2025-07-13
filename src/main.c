@@ -11,7 +11,7 @@ int main(void) {
     RaylibInitialize();
     MenuLoad();
 
-    Color default_fill_color = DEPALERED;
+    Color default_fill_color = DEMORED;
     bool launched = true;
 
     current_player = CreatePlayer();
@@ -32,7 +32,7 @@ int main(void) {
         }
             
         BeginDrawing();
-            ClearBackground(PAXGREEN);
+            ClearBackground(PAXVIRID);
             if (launched) {
                 DrawPlayBox();
                 DrawInterface();

@@ -10,15 +10,15 @@ extern RenderTexture2D playbox;
 extern RenderTexture2D bars;
 extern Texture2D barstex;
 
-void CreatePlayBox();
-void UnloadPlayBox();
-void DrawPlayBox();
+void CreatePlayBox(void);
+void UnloadPlayBox(void);
+void DrawPlayBox(void);
 
-void CreateInterface();
-void UnloadInterface();
-void DrawInterface();
+void CreateInterface(void);
+void UnloadInterface(void);
+void DrawInterface(void);
 
-int GetRenderCenterX();
-int GetRenderCenterY();
+int GetRenderCenterX(void);
+int GetRenderCenterY(void);
 
 #endif

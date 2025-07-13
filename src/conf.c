@@ -1,4 +1,5 @@
 #include <raylib.h>
+#include "system_defs.h"
 #include "interface.h"
 #include "levels.h"
 #include "conf.h"
@@ -11,6 +12,7 @@ void RaylibInitialize(void) {
     InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), TITLE);
     SetTargetFPS(DEFAULT_FPS);
 
+    SetCurrentAspectRatio();
     CreatePlayBox();
     CreateInterface();
 

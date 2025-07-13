@@ -3,11 +3,15 @@ PAX_01
 [0] {
     0   PAX_CONGRESS_THEATRE_BK    0,0
 };
+[2] {
+    0   PAX_CONGRESS_RAIL_C 0,0
+    1   PAX_CONGRESS_DOOR   0,0
+};
 [3] {
-    0   THEATRE_RAILINGb 192,160
+    0   PAX_CONGRESS_RAIL_B 0,0
 };
 [4] {
-    0   THEATRE_RAILING 0,224
+    0   PAX_CONGRESS_RAIL_A 0,0
 };
 [5] {
     0   THEATRE_CHAIRS  0,0 
