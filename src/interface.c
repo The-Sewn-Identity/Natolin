@@ -6,6 +6,7 @@
 RenderTexture2D playbox;
 RenderTexture2D bars;
 Texture2D barstex;
+Texture2D inventory;
 
 unsigned short * aspA;
 unsigned short * aspB;
@@ -49,12 +50,14 @@ int GetRenderCenterY(void) {
 void CreateInterface(void) {
     bars = LoadRenderTexture(ceil((float)RENDERBOXHEIGHT/9) * 16, RENDERBOXHEIGHT);
     printf("%d \n", bars.texture.width);
-    barstex = LoadTexture("assets/interface/game_.png");
+    barstex = LoadTexture("assets/textures/interface/game_.png");
+    inventory = LoadTexture("assets/textures/interface/inventory_.png");
 }
 
 void UnloadInterface(void) {
     UnloadRenderTexture(bars);
     UnloadTexture(barstex);
+    UnloadTexture(inventory);
 }
 
 void DrawInterface(void) {

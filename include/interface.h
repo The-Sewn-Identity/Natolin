@@ -9,6 +9,7 @@
 extern RenderTexture2D playbox;
 extern RenderTexture2D bars;
 extern Texture2D barstex;
+extern Texture2D inventory;
 
 void CreatePlayBox(void);
 void UnloadPlayBox(void);

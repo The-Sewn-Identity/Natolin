@@ -6,6 +6,7 @@
 #include "player.h"
 #include "interface.h"
 #include <stdio.h>
+#include "util.h"
 
 int main(void) {
     RaylibInitialize();
@@ -23,11 +24,16 @@ int main(void) {
                 if (IsKeyPressed(KEY_T) && !launched) {
                 }
                 RenderLSL(*current_tex_cont);
+                AnimatePlayer(&current_player);
+                MovePlayer(&current_player);
             EndTextureMode();
 
             BeginTextureMode(bars);
                 ClearBackground(BLANK);
                 DrawTexture(barstex, 0, 0, WHITE);
+                if (IsKeyDown(KEY_T)) {
+                    DrawTexture(inventory, bars.texture.width/2 - inventory.width/2, bars.texture.height/12, WHITE);
+                }
             EndTextureMode();
         }
             
