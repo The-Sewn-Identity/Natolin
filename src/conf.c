@@ -8,7 +8,7 @@
 void RaylibInitialize(void) {
     LoadLevels();
 
-    //SetConfigFlags(FLAG_FULLSCREEN_MODE);
+    SetConfigFlags(FLAG_FULLSCREEN_MODE);
     InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), TITLE);
     SetTargetFPS(DEFAULT_FPS);
 

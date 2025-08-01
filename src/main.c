@@ -9,10 +9,13 @@
 #include "util.h"
 
 int main(void) {
+    for (int f=16; f > 0; f--) {
+        printf("Pos: %f\n", ((float)144/f));
+    }
     RaylibInitialize();
     MenuLoad();
 
-    Color default_fill_color = DEMORED;
+    Color default_fill_color = PAXBEIGE;
     bool launched = true;
 
     current_player = CreatePlayer();
@@ -24,8 +27,7 @@ int main(void) {
                 if (IsKeyPressed(KEY_T) && !launched) {
                 }
                 RenderLSL(*current_tex_cont);
-                AnimatePlayer(&current_player);
-                MovePlayer(&current_player);
+                UpdatePlayer(&current_player);
             EndTextureMode();
 
             BeginTextureMode(bars);

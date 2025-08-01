@@ -11,17 +11,21 @@ void CreateLSLTexCont(LSL_Texture_Container tex_cont, LSL_Layout layout) {
     for (int o=0; o < 16; o++) {
         for (int r=0; r < 64; r++) {
             if (strcmp(layout.layers[o][r].image, "") != 0) {
+                tex_cont[o][r].index = layout.layers[o][r].index;
                 tex_cont[o][r].tex = LoadTexture(
                     TextFormat("assets/textures/levels/%s/%s.png", layout.levelname, layout.layers[o][r].image)
                 );
-                tex_cont[o][r].index = layout.layers[o][r].index;
                 tex_cont[o][r].x_pos = layout.layers[o][r].x_pos;
                 tex_cont[o][r].y_pos = layout.layers[o][r].y_pos;
+                tex_cont[o][r].rect = (Rectangle){
+                    tex_cont[o][r].x_pos, tex_cont[o][r].y_pos,
+                    tex_cont[o][r].tex.width, tex_cont[o][r].tex.height};
+                snprintf(tex_cont[o][r].feature, sizeof(layout.layers[o][r].feature), layout.layers[o][r].feature);
             }
             else {
                 tex_cont[o][r] = (TextureDef){};
             }
-            //printf("{%d, %d, %d, %d}", tex_cont[o][r].index, tex_cont[o][r].tex.width, tex_cont[o][r].x_pos, tex_cont[o][r].y_pos);
+            printf("{%d, %d, %d, %d, %s}", tex_cont[o][r].index, tex_cont[o][r].tex.width, tex_cont[o][r].x_pos, tex_cont[o][r].y_pos, tex_cont[o][r].feature);
         }
     }
 }

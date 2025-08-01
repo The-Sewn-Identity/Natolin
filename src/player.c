@@ -3,12 +3,14 @@
 #include <stdlib.h>
 #include <math.h>
 #include "player.h"
+#include "levels.h"
 #include "interface.h"
 #include "util.h"
 
 #define SHORTDIR "assets/textures/player/%s/%s"
 
 Player current_player;
+float z_speed;
 
 void LoadPlayerAnimations(Texture2D *** _animations) {
     // 1st array - Idle animations
@@ -46,27 +48,55 @@ void UnloadPlayer(Player *__player) {
 
 }
 
+void UpdatePlayer(Player *__player) {
+    AnimatePlayer(__player);
+    PlayerCollision(__player);
+    MovePlayer(__player);
+}
+
 void AnimatePlayer(Player *__player) {
-    DrawTextureEx(
-        __player->current_tex,
-        (Vector2){
+    __player->vect = (Vector2){
             __player->x_pos + (__player->current_tex.width 
             - PlayerScale(__player) * __player->current_tex.width)/2,
             __player->y_pos + (__player->current_tex.height
             - PlayerScale(__player) * __player->current_tex.height)/2
         },
+    DrawTextureEx(
+        __player->current_tex,
+        __player->vect,
         0, PlayerScale(__player), WHITE
     );
 }
 
+void PlayerCollision(Player * __player) {
+    __player->rect = (Rectangle){
+        __player->vect.x,
+        __player->vect.y,
+        __player->current_tex.width * PlayerScale(__player),
+        __player->current_tex.height * PlayerScale(__player),
+    };
+    for (int r=0; r < 16; r++) {
+        for (int e=0; e < 64; e++) {
+            if (r == __player->layer - 1) {
+                //printf("%d", CheckCollisionRecs(current_tex_cont[r][e]->rect, __player->rect));
+            }
+        }
+    }
+}
+
 void MovePlayer(Player *__player) {
     __player->layer = roundf(__player->offset_z);
+    __player->z_speed = __player->current_tex.height/__player->layer;
     if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) {
-        if (__player->layer < 16) { __player->offset_z += 5 * GetFrameTime(); }
+        if (__player->layer < 16) { 
+            __player->offset_z += __player->z_speed * GetFrameTime();
+        }
         __player->y_pos -= __player->speed * GetFrameTime();
     }
     if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) {
-        if (__player->layer > 1) { __player->offset_z -= 5 * GetFrameTime(); }
+        if (__player->layer > 1) {
+            __player->offset_z -= __player->z_speed * GetFrameTime();
+        }
         __player->y_pos += __player->speed * GetFrameTime();
     }
     if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) {
@@ -77,7 +107,6 @@ void MovePlayer(Player *__player) {
         //if (__player->layer > 1) { __player->offset_z -= 5 * GetFrameTime(); }
         __player->x_pos += __player->speed * GetFrameTime();
     }
-    printf("Delta time: %f\n", GetFrameTime());
 }
 
 void Inspect(Player *__player) {

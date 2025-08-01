@@ -7,8 +7,10 @@
 typedef struct TextureDef {
     short int index;
     Texture2D tex;
+    Rectangle rect;
     short int x_pos;
     short int y_pos;
+    char feature[];
 } TextureDef;
 
 typedef TextureDef LSL_Texture_Container[16][64];
