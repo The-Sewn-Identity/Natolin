@@ -9,13 +9,13 @@ PAX_01
     0   PAX_CONGRESS_DOOR   0,0     NONESSSSS
     1   PAX_CONGRESS_RAIL_C 0,0     NONESSSSS
 };
-[3] {
+[12] {
     0   PAX_CONGRESS_RAIL_B 0,0     NONESSSSS
 };
-[4] {
+[13] {
     0   PAX_CONGRESS_RAIL_A 0,0     NONESSSSS
 };
-[5] {
+[15] {
     0   PAX_CONGRESS_STAND    0,0   NONESSSSS
     1   THEATRE_CHAIRS        0,0   NONESSSSS
 };
