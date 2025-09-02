@@ -1,21 +1,21 @@
 PAX_01
 
 [0] {
-    0   PAX_CONGRESS_THEATRE_BK    0,0  NONESSSSS
-    1   PAX_CONGRESS_CURTAIN       0,0  NONESSSSS
-    2   PAX_CONGRESS_FLOOR         0,0  NONESSSSS
+    0   pax_congress_theatre_bk    0,0  NONESSSSS
+    1   pax_congress_curtain       0,0  NONESSSSS
+    2   pax_congress_floor         0,0  NONESSSSS
 };
 [2] {
-    0   PAX_CONGRESS_DOOR   0,0     NONESSSSS
-    1   PAX_CONGRESS_RAIL_C 0,0     NONESSSSS
+    0   pax_congress_door   0,0     NONESSSSS
+    1   pax_congress_rail_c 0,0     NONESSSSS
 };
 [12] {
-    0   PAX_CONGRESS_RAIL_B 0,0     NONESSSSS
+    0   pax_congress_rail_b 0,0     NONESSSSS
 };
 [13] {
-    0   PAX_CONGRESS_RAIL_A 0,0     NONESSSSS
+    0   pax_congress_rail_a 0,0     NONESSSSS
 };
 [15] {
-    0   PAX_CONGRESS_STAND    0,0   NONESSSSS
-    1   THEATRE_CHAIRS        0,0   NONESSSSS
+    0   pax_congress_stand    0,0   NONESSSSS
+    1   theatre_chairs        0,0   NONESSSSS
 };
