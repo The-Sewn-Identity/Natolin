@@ -10,11 +10,11 @@ TrajLayout LoadTrajFile(char * filename) {
     if (strstr(filename, ".traj") == NULL) { printf("WRONG FILE EXTENSION"); }
 
     TrajLayout * trash = malloc(sizeof(Trajectory));
-    unsigned short int count = malloc(sizeof(count));
-    count = 0;
+    //unsigned short int count = malloc(sizeof(count));
+    //count = 0;
 
     // this sucks make it a for or something
-    do { 
+    /* do { 
         while (fscanf(dottraj, "%hu L%hu %hu,%hu %hu,%hu %hu,%hu",
             trash[count]->layer,
             trash[count]->vect[0].x, trash[count]->vect[0].x,
@@ -24,12 +24,13 @@ TrajLayout LoadTrajFile(char * filename) {
         {
             trash = realloc(trash, (count + 1) * sizeof(Trajectory));
         }
-    } while (!feof(dottraj) && !ferror(dottraj) && count < 16);
+    } while (!feof(dottraj) && !ferror(dottraj) && count < 16); */
 
     for (int l=0; l < 16; l++) {
+        fseek();
+        fscanf();
     }
 
-    FREEPTR(count);
     fclose(dottraj);
     return trash;
 }
