@@ -12,5 +12,6 @@ extern LSL_Texture_Container * current_tex_cont;
 
 void LoadLevels(void);
 void LoadTextureContainers(void);
+void LoadTrajectories(void);
 
 #endif

@@ -4,8 +4,7 @@
 #include <raylib.h>
 
 typedef struct Trajectory {
-    unsigned short int vector_num;
-    unsigned short int layer;
+    unsigned short layer;
     Vector2 * vect;
 } Trajectory;
 

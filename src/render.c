@@ -25,7 +25,7 @@ void CreateLSLTexCont(LSL_Texture_Container tex_cont, LSL_Layout layout) {
             else {
                 tex_cont[o][r] = (TextureDef){};
             }
-            printf("{%d, %d, %d, %d, %s}", tex_cont[o][r].index, tex_cont[o][r].tex.width, tex_cont[o][r].x_pos, tex_cont[o][r].y_pos, tex_cont[o][r].feature);
+            // printf("{%d, %d, %d, %d, %s}", tex_cont[o][r].index, tex_cont[o][r].tex.width, tex_cont[o][r].x_pos, tex_cont[o][r].y_pos, tex_cont[o][r].feature);
         }
     }
 }
