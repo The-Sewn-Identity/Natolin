@@ -3,6 +3,7 @@
 
 #include <lslread.h>
 #include "render.h"
+#include "ltraj.h"
 
 extern LSL_Layout PAX_Congress;
 extern LSL_Texture_Container PAX_Container_01;

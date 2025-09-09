@@ -3,15 +3,10 @@
 
 #include <raylib.h>
 
-typedef struct TrajVector {
-    float result;
-    float x;
-    float y;
-} TrajVector;
-
 typedef struct Trajectory {
     unsigned short layer;
-    TrajVector vect_arr[16];
+    unsigned short count;
+    Vector2 * vect_arr;
 } Trajectory;
 
 typedef Trajectory * TrajLayout;

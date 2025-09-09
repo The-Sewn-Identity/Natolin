@@ -5,6 +5,7 @@
 #include <lslread.h>
 #include "util.h"
 #include "levels.h"
+#include "player.h"
 #include "render.h"
 
 void CreateLSLTexCont(LSL_Texture_Container tex_cont, LSL_Layout layout) {

@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <lslread.h>
 #include "levels.h"
-#include "ltraj.h"
 
 LSL_Layout PAX_Congress;
 LSL_Texture_Container PAX_Container_01;
