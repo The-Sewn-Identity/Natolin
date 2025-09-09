@@ -85,18 +85,11 @@ void PlayerCollision(Player * __player) {
 }
 
 float GetVectFactor(Player *__player) {
-    float n = 
-        (float)(current_traject[__player->layer - 1]->vect_arr[13].x - current_traject[__player->layer - 1]->vect_arr[13 + 1].x) /
-        PYTHAGORAS(
-            (current_traject[__player->layer - 1]->vect_arr[13].x - current_traject[__player->layer - 1]->vect_arr[13 + 1].x),
-            (current_traject[__player->layer - 1]->vect_arr[13].y - current_traject[__player->layer - 1]->vect_arr[13 + 1].y + 1)
-        );
-        printf("Vect factor: %f \n", n);
+    float n = 1.0f;
     return n;
 }
 
 void MovePlayer(Player *__player) {
-
     __player->layer = roundf(__player->offset_z);
     __player->z_speed = __player->current_tex.height/__player->layer;
     if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) {
@@ -110,7 +103,7 @@ void MovePlayer(Player *__player) {
     if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) {
         if (__player->layer > 1) {
             __player->offset_z -= __player->z_speed
-            * GetVectFactor(__player)
+            //* GetVectFactor(__player)
             * GetFrameTime();
         }
         __player->y_pos += __player->speed * GetFrameTime();
