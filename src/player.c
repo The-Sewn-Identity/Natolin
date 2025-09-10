@@ -9,6 +9,8 @@
 
 #define SHORTDIR "assets/textures/player/%s/%s"
 
+struct VectFactor { float x; float y; };
+
 Player current_player;
 float z_speed;
 
@@ -32,7 +34,7 @@ Player CreatePlayer(void) {
         .x_pos = GetRenderCenterX(),
         .y_pos = GetRenderCenterY(),
         .speed = 20.0f,
-        .layer = 16,
+        .layer = 14,
         .offset_x = 0,
         .offset_y = 0,
         .offset_z = 1,
@@ -85,8 +87,20 @@ void PlayerCollision(Player * __player) {
 }
 
 float GetVectFactor(Player *__player) {
-    float n = 1.0f;
-    return n;
+    float n;
+
+    for (int l=0; l < (*current_traject)[__player->layer - 1].count - 1; l++) {
+        if (
+            (*current_traject)[__player->layer - 1].vect_arr[l].x <= (__player->rect.x + __player->rect.width) - __player->rect.width/2
+            && (__player->rect.x + __player->rect.width) - __player->rect.width/2 <= (*current_traject)[__player->layer - 1].vect_arr[l + 1].x
+        ) {
+            n = PYTHAGORAS(
+                fabs((*current_traject)[__player->layer - 1].vect_arr[l].x - (*current_traject)[__player->layer - 1].vect_arr[l + 1].x),
+                fabs((*current_traject)[__player->layer - 1].vect_arr[l].y - (*current_traject)[__player->layer - 1].vect_arr[l + 1].y)
+            );
+        }
+    }
+    return (float)n/1000;
 }
 
 void MovePlayer(Player *__player) {
@@ -103,18 +117,18 @@ void MovePlayer(Player *__player) {
     if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) {
         if (__player->layer > 1) {
             __player->offset_z -= __player->z_speed
-            //* GetVectFactor(__player)
+            * GetVectFactor(__player)
             * GetFrameTime();
         }
         __player->y_pos += __player->speed * GetFrameTime();
     }
     if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) {
         //if (__player->layer > 1) { __player->offset_z -= 5 * GetFrameTime(); }
-        __player->x_pos -= __player->speed * GetFrameTime();
+        __player->x_pos -= __player->speed * GetVectFactor(__player) * GetFrameTime();
     }
     if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) {
         //if (__player->layer > 1) { __player->offset_z -= 5 * GetFrameTime(); }
-        __player->x_pos += __player->speed * GetFrameTime();
+        __player->x_pos += __player->speed * GetVectFactor(__player) * GetFrameTime();
     }
 }
 
