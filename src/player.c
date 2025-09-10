@@ -8,6 +8,7 @@
 #include "util.h"
 
 #define SHORTDIR "assets/textures/player/%s/%s"
+#define l_num   16
 
 struct VectFactor { float x; float y; };
 
@@ -31,7 +32,7 @@ Player CreatePlayer(void) {
     Player pl = {
         .fname = "Stanisław",
         .lname = "Konieczny",
-        .x_pos = GetRenderCenterX(),
+        .x_pos = GetRenderCenterX() + 45,
         .y_pos = GetRenderCenterY(),
         .speed = 20.0f,
         .layer = 14,
@@ -87,29 +88,30 @@ void PlayerCollision(Player * __player) {
 }
 
 float GetVectFactor(Player *__player) {
-    float n;
+    float * n = malloc(sizeof(float));
+    float * b = malloc(sizeof(float));
 
     for (int l=0; l < (*current_traject)[__player->layer - 1].count - 1; l++) {
         if (
-            (*current_traject)[__player->layer - 1].vect_arr[l].x <= (__player->rect.x + __player->rect.width) - __player->rect.width/2
-            && (__player->rect.x + __player->rect.width) - __player->rect.width/2 <= (*current_traject)[__player->layer - 1].vect_arr[l + 1].x
+            (*current_traject)[__player->layer - 1].vect_arr[l].x < __player->rect.x + __player->rect.width/2
+            &&
+            __player->rect.x + __player->rect.width/2 < (*current_traject)[__player->layer - 1].vect_arr[l + 1].x
         ) {
-            n = PYTHAGORAS(
-                fabs((*current_traject)[__player->layer - 1].vect_arr[l].x - (*current_traject)[__player->layer - 1].vect_arr[l + 1].x),
-                fabs((*current_traject)[__player->layer - 1].vect_arr[l].y - (*current_traject)[__player->layer - 1].vect_arr[l + 1].y)
-            );
+            *n = (*current_traject)[__player->layer - 1].vect_arr[l].x;
+            printf("Float: %f\n", *n);
         }
     }
-    return (float)n/1000;
+    return (float)1;
 }
 
 void MovePlayer(Player *__player) {
     __player->layer = roundf(__player->offset_z);
+    printf("Layer: %d\n", __player->layer);
     __player->z_speed = __player->current_tex.height/__player->layer;
     if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) {
         if (__player->layer < 16) { 
             __player->offset_z += __player->z_speed
-            * GetVectFactor(__player)
+            //* GetVectFactor(__player)
             * GetFrameTime();
         }
         __player->y_pos -= __player->speed * GetFrameTime();
@@ -117,7 +119,7 @@ void MovePlayer(Player *__player) {
     if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) {
         if (__player->layer > 1) {
             __player->offset_z -= __player->z_speed
-            * GetVectFactor(__player)
+            //* GetVectFactor(__player)
             * GetFrameTime();
         }
         __player->y_pos += __player->speed * GetFrameTime();
