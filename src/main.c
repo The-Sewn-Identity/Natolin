@@ -28,6 +28,8 @@ int main(void) {
                 }
                 RenderLSL(*current_tex_cont);
                 UpdatePlayer(&current_player);
+                DrawText(TextFormat("Layer %d", current_player.layer), 10, 0, 10, SLOBODA);
+                DrawText(TextFormat("Vector factor X: %f", current_player.vect_factor.x), 10, 20, 10, SLOBODA);
             EndTextureMode();
 
             BeginTextureMode(bars);

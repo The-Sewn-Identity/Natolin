@@ -6,10 +6,10 @@ typedef struct Player {
     Texture2D current_tex;
     Rectangle rect;
     Vector2 vect;
+    Vector2 vect_factor;
     char * fname; char * lname;
     float x_pos; float y_pos;
     float speed; float z_speed; 
-    float vect_factor;
     unsigned short layer;
     float offset_x;
     float offset_y;

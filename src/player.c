@@ -33,7 +33,7 @@ Player CreatePlayer(void) {
     Player pl = {
         .fname = "Stanisław",
         .lname = "Konieczny",
-        .x_pos = GetRenderCenterX(),
+        .x_pos = GetRenderCenterX() + 45,
         .y_pos = GetRenderCenterY(),
         .speed = 20.0f,
         .offset_x = 0,
@@ -81,45 +81,47 @@ void PlayerCollision(Player * __player) {
     for (int r=0; r < 16; r++) {
         for (int e=0; e < 64; e++) {
             if (r == __player->layer - 1) {
-                //printf("%d", CheckCollisionRecs(current_tex_cont[r][e]->rect, __player->rect));
+                //printf("%d \n", CheckCollisionRecs((*current_tex_cont)[r][e].rect, __player->rect));
             }
         }
     }
 }
 
-float GetVectFactor(Player *__player) {
-    float * n = malloc(sizeof(float));
-    float * b = malloc(sizeof(float));
+void GetVectFactor(Player *__player) {
+    float n;
+    float b;
+    float result;
 
     for (int l=0; l < (*current_traject)[__player->layer - 1].count - 1; l++) {
         if (
             (*current_traject)[__player->layer - 1].vect_arr[l].x < __player->rect.x + __player->rect.width/2
             &&
             __player->rect.x + __player->rect.width/2 < (*current_traject)[__player->layer - 1].vect_arr[l + 1].x
+            &&            
+            (*current_traject)[__player->layer - 1].vect_arr[l].y >= __player->rect.y + __player->rect.height/2
+            &&
+            __player->rect.y + __player->rect.height/2 >= (*current_traject)[__player->layer - 1].vect_arr[l + 1].y
+
         ) {
-            *n = fabsf((*current_traject)[__player->layer - 1].vect_arr[l].x - (*current_traject)[__player->layer - 1].vect_arr[l + 1].x);
-            *b = PYTHAGORAS(
+            n = fabsf((*current_traject)[__player->layer - 1].vect_arr[l].x - (*current_traject)[__player->layer - 1].vect_arr[l + 1].x);
+            b = PYTHAGORAS(
                 (*current_traject)[__player->layer - 1].vect_arr[l].x - (*current_traject)[__player->layer - 1].vect_arr[l + 1].x, 
                 (*current_traject)[__player->layer - 1].vect_arr[l].y - (*current_traject)[__player->layer - 1].vect_arr[l + 1].y
             );
-            return (float)(*n / *b)/10;
-        }
-        else {
-            *n = 1; *b = 1;
-            return 0;
+            __player->vect_factor.x = (float)n/b;
         }
     }
 }
 
 void MovePlayer(Player *__player) {
     __player->layer = l_num - roundf(__player->offset_z) + 1;
-    printf("Layer: %d\n", __player->layer);
-    printf("VectFactor: %f\n", GetVectFactor(__player));
     __player->z_speed = __player->current_tex.height/__player->layer;
+    GetVectFactor(__player);
+
     if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) {
         if (__player->layer > 1) { 
             __player->offset_z += __player->z_speed
-            * GetVectFactor(__player)
+            * __player->vect_factor.x
             * GetFrameTime();
         }
         __player->y_pos -= __player->speed * GetFrameTime();
@@ -127,7 +129,7 @@ void MovePlayer(Player *__player) {
     if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) {
         if (__player->layer < 16) {
             __player->offset_z -= __player->z_speed
-            * GetVectFactor(__player)
+            * __player->vect_factor.x
             * GetFrameTime();
         }
         __player->y_pos += __player->speed * GetFrameTime();
