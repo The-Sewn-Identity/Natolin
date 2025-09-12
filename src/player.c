@@ -33,8 +33,8 @@ Player CreatePlayer(void) {
     Player pl = {
         .fname = "Stanisław",
         .lname = "Konieczny",
-        .x_pos = GetRenderCenterX() + 45,
-        .y_pos = GetRenderCenterY(),
+        .x_pos = 370,
+        .y_pos = 250,
         .speed = 20.0f,
         .offset_x = 0,
         .offset_y = 0,
@@ -88,40 +88,39 @@ void PlayerCollision(Player * __player) {
 }
 
 void GetVectFactor(Player *__player) {
+    unsigned short lays = __player->layer - 1;
     float n;
     float b;
     float result;
 
-    for (int l=0; l < (*current_traject)[__player->layer - 1].count - 1; l++) {
+    for (int l=0; l < (*current_traject)[lays].count - 1; l++) {
         if (
-            (*current_traject)[__player->layer - 1].vect_arr[l].x < __player->rect.x + __player->rect.width/2
-            &&
-            __player->rect.x + __player->rect.width/2 < (*current_traject)[__player->layer - 1].vect_arr[l + 1].x
-            &&            
-            (*current_traject)[__player->layer - 1].vect_arr[l].y >= __player->rect.y + __player->rect.height/2
-            &&
-            __player->rect.y + __player->rect.height/2 >= (*current_traject)[__player->layer - 1].vect_arr[l + 1].y
-
+            LOCCMP((*current_traject)[lays].vect_arr[l].x, (*current_traject)[lays].vect_arr[l+1].x, __player->rect.x)
+            && LOCCMP((*current_traject)[lays].vect_arr[l].y, (*current_traject)[lays].vect_arr[l+1].y, __player->rect.y)
         ) {
-            n = fabsf((*current_traject)[__player->layer - 1].vect_arr[l].x - (*current_traject)[__player->layer - 1].vect_arr[l + 1].x);
+            /*n = fabsf((*current_traject)[lays].vect_arr[l].x - (*current_traject)[lays].vect_arr[l + 1].x);
             b = PYTHAGORAS(
-                (*current_traject)[__player->layer - 1].vect_arr[l].x - (*current_traject)[__player->layer - 1].vect_arr[l + 1].x, 
-                (*current_traject)[__player->layer - 1].vect_arr[l].y - (*current_traject)[__player->layer - 1].vect_arr[l + 1].y
-            );
-            __player->vect_factor.x = (float)n/b;
+                (*current_traject)[lays].vect_arr[l].x - (*current_traject)[lays].vect_arr[l + 1].x, 
+                (*current_traject)[lays].vect_arr[l].y - (*current_traject)[lays].vect_arr[l + 1].y
+            );*/
+            //__player->vect_factor.x = (float)n/b;
+            printf("%s\n", "true");
         }
+        //printf("LOCCMP V%d, %d%d\n", l, LOCCMP((*current_traject)[lays].vect_arr[l].x, (*current_traject)[lays].vect_arr[l+1].x, __player->rect.x),
+        //LOCCMP((*current_traject)[lays].vect_arr[l].y, (*current_traject)[lays].vect_arr[l+1].y, __player->rect.y));
     }
 }
 
 void MovePlayer(Player *__player) {
-    __player->layer = l_num - roundf(__player->offset_z) + 1;
+    __player->layer = 1;
     __player->z_speed = __player->current_tex.height/__player->layer;
     GetVectFactor(__player);
+
 
     if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) {
         if (__player->layer > 1) { 
             __player->offset_z += __player->z_speed
-            * __player->vect_factor.x
+            //* __player->vect_factor.x
             * GetFrameTime();
         }
         __player->y_pos -= __player->speed * GetFrameTime();
@@ -129,7 +128,7 @@ void MovePlayer(Player *__player) {
     if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) {
         if (__player->layer < 16) {
             __player->offset_z -= __player->z_speed
-            * __player->vect_factor.x
+            //* __player->vect_factor.x
             * GetFrameTime();
         }
         __player->y_pos += __player->speed * GetFrameTime();

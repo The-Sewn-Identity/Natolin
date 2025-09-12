@@ -15,6 +15,8 @@ int main(void) {
     RaylibInitialize();
     MenuLoad();
 
+    printf("\n\nMACRO LOCCMP: %d\n\n", LOCCMP(10, 15, 8));
+
     Color default_fill_color = PAXBEIGE;
     bool launched = true;
 
@@ -30,6 +32,8 @@ int main(void) {
                 UpdatePlayer(&current_player);
                 DrawText(TextFormat("Layer %d", current_player.layer), 10, 0, 10, SLOBODA);
                 DrawText(TextFormat("Vector factor X: %f", current_player.vect_factor.x), 10, 20, 10, SLOBODA);
+                DrawText(TextFormat("Player X, Y: %f,%f", 
+                    current_player.rect.x, current_player.rect.y), 10, 30, 10, SLOBODA);
             EndTextureMode();
 
             BeginTextureMode(bars);
