@@ -8,7 +8,6 @@
 #include "util.h"
 
 #define SHORTDIR "assets/textures/player/%s/%s"
-#define l_num   16
 
 struct VectFactor { float x; float y; };
 
@@ -33,8 +32,8 @@ Player CreatePlayer(void) {
     Player pl = {
         .fname = "Stanisław",
         .lname = "Konieczny",
-        .x_pos = 370,
-        .y_pos = 250,
+        .x_pos = GetRenderCenterX(),
+        .y_pos = GetRenderCenterY(),
         .speed = 20.0f,
         .offset_x = 0,
         .offset_y = 0,
@@ -81,7 +80,7 @@ void PlayerCollision(Player * __player) {
     for (int r=0; r < 16; r++) {
         for (int e=0; e < 64; e++) {
             if (r == __player->layer - 1) {
-                //printf("%d \n", CheckCollisionRecs((*current_tex_cont)[r][e].rect, __player->rect));
+                //printf("%d \x1", CheckCollisionRecs((*current_tex_cont)[r][e].rect, __player->rect));
             }
         }
     }
@@ -89,38 +88,35 @@ void PlayerCollision(Player * __player) {
 
 void GetVectFactor(Player *__player) {
     unsigned short lays = __player->layer - 1;
-    float n;
-    float b;
-    float result;
+    float x1; float x2;
+    float y1; float y2;
 
     for (int l=0; l < (*current_traject)[lays].count - 1; l++) {
-        if (
-            LOCCMP((*current_traject)[lays].vect_arr[l].x, (*current_traject)[lays].vect_arr[l+1].x, __player->rect.x)
-            && LOCCMP((*current_traject)[lays].vect_arr[l].y, (*current_traject)[lays].vect_arr[l+1].y, __player->rect.y)
-        ) {
-            /*n = fabsf((*current_traject)[lays].vect_arr[l].x - (*current_traject)[lays].vect_arr[l + 1].x);
-            b = PYTHAGORAS(
+        if (LOCCMP((*current_traject)[lays].vect_arr[l].x, (*current_traject)[lays].vect_arr[l+1].x, __player->rect.x)) {
+            x1 = fabsf((*current_traject)[lays].vect_arr[l].x - (*current_traject)[lays].vect_arr[l + 1].x);
+            x2 = PYTHAGORAS(
                 (*current_traject)[lays].vect_arr[l].x - (*current_traject)[lays].vect_arr[l + 1].x, 
                 (*current_traject)[lays].vect_arr[l].y - (*current_traject)[lays].vect_arr[l + 1].y
-            );*/
-            //__player->vect_factor.x = (float)n/b;
-            printf("%s\n", "true");
+            );
+            __player->vect_factor.x = (x1/x2)/100;
         }
-        //printf("LOCCMP V%d, %d%d\n", l, LOCCMP((*current_traject)[lays].vect_arr[l].x, (*current_traject)[lays].vect_arr[l+1].x, __player->rect.x),
-        //LOCCMP((*current_traject)[lays].vect_arr[l].y, (*current_traject)[lays].vect_arr[l+1].y, __player->rect.y));
+        if (LOCCMP((*current_traject)[lays].vect_arr[l].y, (*current_traject)[lays].vect_arr[l+1].y, __player->rect.y)) {
+            y1 = fabsf((*current_traject)[lays].vect_arr[l].x - (*current_traject)[lays].vect_arr[l + 1].x);
+            y2 = fabsf((*current_traject)[lays].vect_arr[l].y - (*current_traject)[lays].vect_arr[l + 1].y);
+            __player->vect_factor.y = (y2/y1);
+        }
     }
 }
 
 void MovePlayer(Player *__player) {
-    __player->layer = 1;
+    __player->layer = 16 - roundf(__player->offset_z) + 1;
     __player->z_speed = __player->current_tex.height/__player->layer;
     GetVectFactor(__player);
-
 
     if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) {
         if (__player->layer > 1) { 
             __player->offset_z += __player->z_speed
-            //* __player->vect_factor.x
+            * __player->vect_factor.y
             * GetFrameTime();
         }
         __player->y_pos -= __player->speed * GetFrameTime();
@@ -128,7 +124,7 @@ void MovePlayer(Player *__player) {
     if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) {
         if (__player->layer < 16) {
             __player->offset_z -= __player->z_speed
-            //* __player->vect_factor.x
+            * __player->vect_factor.y
             * GetFrameTime();
         }
         __player->y_pos += __player->speed * GetFrameTime();
