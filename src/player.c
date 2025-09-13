@@ -92,18 +92,23 @@ void GetVectFactor(Player *__player) {
     float y1; float y2;
 
     for (int l=0; l < (*current_traject)[lays].count - 1; l++) {
-        if (LOCCMP((*current_traject)[lays].vect_arr[l].x, (*current_traject)[lays].vect_arr[l+1].x, __player->rect.x)) {
+        if (
+            LOCCMP((*current_traject)[lays].vect_arr[l].x, (*current_traject)[lays].vect_arr[l+1].x, __player->rect.x)
+            && LOCCMP((*current_traject)[lays].vect_arr[l].y, (*current_traject)[lays].vect_arr[l+1].y, __player->rect.y)
+        ) {
             x1 = fabsf((*current_traject)[lays].vect_arr[l].x - (*current_traject)[lays].vect_arr[l + 1].x);
             x2 = PYTHAGORAS(
                 (*current_traject)[lays].vect_arr[l].x - (*current_traject)[lays].vect_arr[l + 1].x, 
                 (*current_traject)[lays].vect_arr[l].y - (*current_traject)[lays].vect_arr[l + 1].y
             );
-            __player->vect_factor.x = (x1/x2)/100;
-        }
-        if (LOCCMP((*current_traject)[lays].vect_arr[l].y, (*current_traject)[lays].vect_arr[l+1].y, __player->rect.y)) {
+            __player->vect_factor.x = (x1/x2);
             y1 = fabsf((*current_traject)[lays].vect_arr[l].x - (*current_traject)[lays].vect_arr[l + 1].x);
             y2 = fabsf((*current_traject)[lays].vect_arr[l].y - (*current_traject)[lays].vect_arr[l + 1].y);
             __player->vect_factor.y = (y2/y1);
+            break;
+        } else {
+            __player->vect_factor.x = 0; __player->vect_factor.y = 0;
+            continue;
         }
     }
 }
@@ -116,26 +121,24 @@ void MovePlayer(Player *__player) {
     if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) {
         if (__player->layer > 1) { 
             __player->offset_z += __player->z_speed
-            * __player->vect_factor.y
             * GetFrameTime();
         }
-        __player->y_pos -= __player->speed * GetFrameTime();
+        __player->y_pos -= __player->speed * __player->vect_factor.y * GetFrameTime();
     }
     if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) {
         if (__player->layer < 16) {
             __player->offset_z -= __player->z_speed
-            * __player->vect_factor.y
             * GetFrameTime();
         }
-        __player->y_pos += __player->speed * GetFrameTime();
+        __player->y_pos += __player->speed * __player->vect_factor.y * GetFrameTime();
     }
     if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) {
         //if (__player->layer > 1) { __player->offset_z -= 5 * GetFrameTime(); }
-        __player->x_pos -= __player->speed * GetFrameTime();
+        __player->x_pos -= __player->speed * __player->vect_factor.x * GetFrameTime();
     }
     if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) {
         //if (__player->layer > 1) { __player->offset_z -= 5 * GetFrameTime(); }
-        __player->x_pos += __player->speed * GetFrameTime();
+        __player->x_pos += __player->speed * __player->vect_factor.x * GetFrameTime();
     }
 }
 
