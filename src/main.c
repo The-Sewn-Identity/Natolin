@@ -31,8 +31,8 @@ int main(void) {
                 RenderLSL(*current_tex_cont);
                 UpdatePlayer(&current_player);
                 DrawText(TextFormat("Layer %d", current_player.layer), 10, 0, 10, SLOBODA);
-                DrawText(TextFormat("Vector factor X: %f", current_player.vect_factor.x), 10, 20, 10, SLOBODA);
-                DrawText(TextFormat("Vector factor Y: %f", current_player.vect_factor.y), 10, 30, 10, SLOBODA);
+                DrawText(TextFormat("Vector factor XL, XR: %f, %f", current_player.vect_factor.xl, current_player.vect_factor.xr), 10, 20, 10, SLOBODA);
+                DrawText(TextFormat("Vector factor YD, YU: %f, %f", current_player.vect_factor.yd, current_player.vect_factor.yd), 10, 30, 10, SLOBODA);
                 DrawText(TextFormat("Player X, Y: %f,%f", 
                     current_player.rect.x, current_player.rect.y), 10, 40, 10, SLOBODA);
             EndTextureMode();

@@ -9,8 +9,6 @@
 
 #define SHORTDIR "assets/textures/player/%s/%s"
 
-struct VectFactor { float x; float y; };
-
 Player current_player;
 float z_speed;
 
@@ -32,8 +30,8 @@ Player CreatePlayer(void) {
     Player pl = {
         .fname = "Stanisław",
         .lname = "Konieczny",
-        .x_pos = GetRenderCenterX(),
-        .y_pos = GetRenderCenterY(),
+        .x_pos = GetRenderCenterX() + 100,
+        .y_pos = GetRenderCenterY() + 40,
         .speed = 20.0f,
         .offset_x = 0,
         .offset_y = 0,
@@ -101,13 +99,14 @@ void GetVectFactor(Player *__player) {
                 (*current_traject)[lays].vect_arr[l].x - (*current_traject)[lays].vect_arr[l + 1].x, 
                 (*current_traject)[lays].vect_arr[l].y - (*current_traject)[lays].vect_arr[l + 1].y
             );
-            __player->vect_factor.x = (x1/x2);
+            __player->vect_factor.xl = (x1/x2); __player->vect_factor.xr = (x1/x2);
             y1 = fabsf((*current_traject)[lays].vect_arr[l].x - (*current_traject)[lays].vect_arr[l + 1].x);
             y2 = fabsf((*current_traject)[lays].vect_arr[l].y - (*current_traject)[lays].vect_arr[l + 1].y);
-            __player->vect_factor.y = (y2/y1);
+            __player->vect_factor.yd = (y2/y1), __player->vect_factor.yu = (y2/y1);
             break;
         } else {
-            __player->vect_factor.x = 0; __player->vect_factor.y = 0;
+            if (__player->rect.x < (*current_traject)[lays].vect_arr[l].x) { __player->vect_factor.xl = 0; }
+            if (__player->rect.x > (*current_traject)[lays].vect_arr[l + 1].x) { __player->vect_factor.xr = 0; }
             continue;
         }
     }
@@ -123,22 +122,22 @@ void MovePlayer(Player *__player) {
             __player->offset_z += __player->z_speed
             * GetFrameTime();
         }
-        __player->y_pos -= __player->speed * __player->vect_factor.y * GetFrameTime();
+        __player->y_pos -= __player->speed * __player->vect_factor.yu * GetFrameTime();
     }
     if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) {
         if (__player->layer < 16) {
             __player->offset_z -= __player->z_speed
             * GetFrameTime();
         }
-        __player->y_pos += __player->speed * __player->vect_factor.y * GetFrameTime();
+        __player->y_pos += __player->speed * __player->vect_factor.yd * GetFrameTime();
     }
     if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) {
         //if (__player->layer > 1) { __player->offset_z -= 5 * GetFrameTime(); }
-        __player->x_pos -= __player->speed * __player->vect_factor.x * GetFrameTime();
+        __player->x_pos -= __player->speed * __player->vect_factor.xl * GetFrameTime();
     }
     if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) {
         //if (__player->layer > 1) { __player->offset_z -= 5 * GetFrameTime(); }
-        __player->x_pos += __player->speed * __player->vect_factor.x * GetFrameTime();
+        __player->x_pos += __player->speed * __player->vect_factor.xr * GetFrameTime();
     }
 }
 
