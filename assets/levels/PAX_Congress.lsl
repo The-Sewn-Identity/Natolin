@@ -6,7 +6,7 @@ PAX_01
     2   pax_congress_floor         0,0  NONESSSSS
 };
 [2] {
-    0   pax_congress_door   0,0     NONESSSSS
+    0   pax_congress_door   0,0     OPEN__
     1   pax_congress_rail_c 0,0     NONESSSSS
 };
 [12] {

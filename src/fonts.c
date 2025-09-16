@@ -13,7 +13,7 @@ FontData font_list[] = {
     {&DokChampa, "dokchampa"},
     {&Zaklad, "Zaklad-Regular"}
 };
-unsigned short int font_list_len;
+unsigned short font_list_len;
 
 void FontsLoad(void) {
     font_list_len = ARRAYSIZE(font_list);

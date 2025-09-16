@@ -28,13 +28,13 @@ int main(void) {
                 ClearBackground(default_fill_color);
                 if (IsKeyPressed(KEY_T) && !launched) {
                 }
-                RenderLSL(*current_tex_cont);
+                RenderPlayerAndLSL(*current_tex_cont);
                 UpdatePlayer(&current_player);
                 DrawText(TextFormat("Layer %d", current_player.layer), 10, 0, 10, SLOBODA);
                 DrawText(TextFormat("Vector factor XL, XR: %f, %f", current_player.vect_factor.xl, current_player.vect_factor.xr), 10, 20, 10, SLOBODA);
-                DrawText(TextFormat("Vector factor YD, YU: %f, %f", current_player.vect_factor.yd, current_player.vect_factor.yd), 10, 30, 10, SLOBODA);
-                DrawText(TextFormat("Player X, Y: %f,%f", 
-                    current_player.rect.x, current_player.rect.y), 10, 40, 10, SLOBODA);
+                DrawText(TextFormat("Vector factor YD, YU: %f, %f", current_player.vect_factor.yd, current_player.vect_factor.yu), 10, 30, 10, SLOBODA);
+                DrawText(TextFormat("Player CX, CY: %f,%f", 
+                    current_player.rect.x + current_player.rect.width/2, current_player.rect.y + current_player.rect.height/2), 10, 40, 10, SLOBODA);
             EndTextureMode();
 
             BeginTextureMode(bars);

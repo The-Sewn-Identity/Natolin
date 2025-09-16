@@ -8,6 +8,9 @@
 #include "player.h"
 #include "render.h"
 
+void Open(TextureDef * texdef) {
+}
+
 void CreateLSLTexCont(LSL_Texture_Container tex_cont, LSL_Layout layout) {
     for (int o=0; o < 16; o++) {
         for (int r=0; r < 64; r++) {
@@ -21,7 +24,14 @@ void CreateLSLTexCont(LSL_Texture_Container tex_cont, LSL_Layout layout) {
                 tex_cont[o][r].rect = (Rectangle){
                     tex_cont[o][r].x_pos, tex_cont[o][r].y_pos,
                     tex_cont[o][r].tex.width, tex_cont[o][r].tex.height};
-                snprintf(tex_cont[o][r].feature, sizeof(layout.layers[o][r].feature), layout.layers[o][r].feature);
+                //snprintf(tex_cont[o][r].feature, sizeof(layout.layers[o][r].feature), layout.layers[o][r].feature);
+                if (strcmp(layout.layers[o][r].feature, "") == 0) {
+                    
+                } else if (strcmp(layout.layers[o][r].feature, "NONESSSSS") == 0) {
+                    printf("[[[ %s ]]]\n", layout.layers[o][r].feature);
+                } else {
+
+                }
             }
             else {
                 tex_cont[o][r] = (TextureDef){};
@@ -39,8 +49,13 @@ void FreeLSLTextCont(LSL_Texture_Container tex_cont) {
     }
 }
 
-void RenderLSL(LSL_Texture_Container tex_cont) {
-    for (int r=0; r < 16; r++) {
+void RenderPlayerAndLSL(LSL_Texture_Container tex_cont) {
+    int r = 0;
+
+    for (r; r < 16; r++) {
+        if (current_player.layer - 1 <= r) {
+            UpdatePlayer(&current_player);
+        }
         for (int e=0; e < 64; e++) {
             if (IsTextureValid(tex_cont[r][e].tex)) { 
                 DrawTexture(tex_cont[r][e].tex, 
@@ -48,6 +63,9 @@ void RenderLSL(LSL_Texture_Container tex_cont) {
                     tex_cont[r][e].y_pos,
                     WHITE); 
             }
+        }
+        if (current_player.layer - 1 > r) {
+            UpdatePlayer(&current_player);
         }
     }
 }
