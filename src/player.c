@@ -35,7 +35,7 @@ Player CreatePlayer(void) {
         .speed = 20.0f,
         .offset_x = 0,
         .offset_y = 0,
-        .offset_z = 3,
+        .offset_z = 1,
         .ability = Inspect
     };
     LoadPlayerAnimations(&pl.animations);
@@ -49,9 +49,9 @@ void UnloadPlayer(Player *__player) {
 }
 
 void UpdatePlayer(Player *__player) {
-    AnimatePlayer(__player);
     PlayerCollision(__player);
     MovePlayer(__player);
+    __player->ability(__player);
 }
 
 void AnimatePlayer(Player *__player) {
@@ -89,7 +89,14 @@ void GetVectFactor(Player *__player) {
     float x1; float pzpr;
     float y;
 
+    unsigned short lvx = (*current_traject)[layer].vect_arr[0].y; unsigned short svx = lvx;
     unsigned short lvy = (*current_traject)[layer].vect_arr[0].y; unsigned short svy = lvy;
+    for (int m=0; m < (*current_traject)[layer].count; m++) { 
+        if (lvx < (*current_traject)[layer].vect_arr[m].x) { lvx = (*current_traject)[layer].vect_arr[m].x; }
+    }
+    for (int m=0; m < (*current_traject)[layer].count; m++) { 
+        if (svx > (*current_traject)[layer].vect_arr[m].x) { svx = (*current_traject)[layer].vect_arr[m].x; }
+    }
     for (int m=0; m < (*current_traject)[layer].count; m++) { 
         if (lvy < (*current_traject)[layer].vect_arr[m].y) { lvy = (*current_traject)[layer].vect_arr[m].y; }
     }
@@ -109,9 +116,9 @@ void GetVectFactor(Player *__player) {
                 (*current_traject)[layer].vect_arr[l].x - (*current_traject)[layer].vect_arr[l + 1].x, 
                 (*current_traject)[layer].vect_arr[l].y - (*current_traject)[layer].vect_arr[l + 1].y
             );
-            __player->vect_factor.xr = (x1/pzpr); __player->vect_factor.xl = -__player->vect_factor.xr;
+            __player->vect_factor.xr = (x1/pzpr); __player->vect_factor.xl = -(x1/pzpr);
             y = fabsf((*current_traject)[layer].vect_arr[l].y - (*current_traject)[layer].vect_arr[l + 1].y);
-            __player->vect_factor.yd = (y/x1), __player->vect_factor.yu = -__player->vect_factor.yd;
+            __player->vect_factor.yd = (y/x1), __player->vect_factor.yu = -(y/x1);
             break;
         } else {
             if (__player->rect.x + __player->rect.width/2 < (*current_traject)[layer].vect_arr[l].x) { 
@@ -154,6 +161,9 @@ void MovePlayer(Player *__player) {
         __player->x_pos += __player->speed * __player->vect_factor.xr * GetFrameTime();
         __player->y_pos += __player->speed * __player->vect_factor.yu * GetFrameTime();
     }
+
+    __player->x_pos = GetMouseX();
+    __player->y_pos = GetMouseY();
 }
 
 void Inspect(Player *__player) {

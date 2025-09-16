@@ -28,7 +28,7 @@ int main(void) {
                 ClearBackground(default_fill_color);
                 if (IsKeyPressed(KEY_T) && !launched) {
                 }
-                RenderPlayerAndLSL(*current_tex_cont);
+                RenderLevel(*current_tex_cont);
                 UpdatePlayer(&current_player);
                 DrawText(TextFormat("Layer %d", current_player.layer), 10, 0, 10, SLOBODA);
                 DrawText(TextFormat("Vector factor XL, XR: %f, %f", current_player.vect_factor.xl, current_player.vect_factor.xr), 10, 20, 10, SLOBODA);

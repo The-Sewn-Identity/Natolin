@@ -49,12 +49,10 @@ void FreeLSLTextCont(LSL_Texture_Container tex_cont) {
     }
 }
 
-void RenderPlayerAndLSL(LSL_Texture_Container tex_cont) {
-    int r = 0;
-
-    for (r; r < 16; r++) {
-        if (current_player.layer - 1 <= r) {
-            UpdatePlayer(&current_player);
+void RenderLevel(LSL_Texture_Container tex_cont) {
+    for (int r=0; r < 16; r++) {
+        if (current_player.layer - 1 < r) {
+            AnimatePlayer(&current_player);
         }
         for (int e=0; e < 64; e++) {
             if (IsTextureValid(tex_cont[r][e].tex)) { 
@@ -64,8 +62,8 @@ void RenderPlayerAndLSL(LSL_Texture_Container tex_cont) {
                     WHITE); 
             }
         }
-        if (current_player.layer - 1 > r) {
-            UpdatePlayer(&current_player);
+        if (current_player.layer - 1 >= r) {
+            AnimatePlayer(&current_player);
         }
     }
 }
