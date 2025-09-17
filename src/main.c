@@ -15,8 +15,6 @@ int main(void) {
     RaylibInitialize();
     MenuLoad();
 
-    printf("\n\nMACRO LOCCMP: %d\n\n", LOCCMP(10, 15, 17));
-
     Color default_fill_color = PAXBEIGE;
     bool launched = true;
 
@@ -40,17 +38,17 @@ int main(void) {
             BeginTextureMode(bars);
                 ClearBackground(BLANK);
                 DrawTexture(barstex, 0, 0, WHITE);
-                if (IsKeyDown(KEY_T)) {
-                    DrawTexture(inventory, bars.texture.width/2 - inventory.width/2, bars.texture.height/12, WHITE);
-                }
+                DrawTexture(inventory, bars.texture.width/2 - inventory.width/2, bars.texture.height/12, WHITE);
             EndTextureMode();
-        }
             
+        }
+        
         BeginDrawing();
             ClearBackground(PAXVIRID);
             if (launched) {
                 DrawPlayBox();
                 DrawInterface();
+                if (IsKeyDown(KEY_T)) { DrawInventory(); }
             }
             if (IsKeyDown(KEY_L)) { MenuDraw(); }
         EndDrawing();

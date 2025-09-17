@@ -1,5 +1,6 @@
 #include <raylib.h>
 #include <stdlib.h>
+#include "system_defs.h"
 #include "interface.h"
 #include "util.h"
 
@@ -7,6 +8,7 @@ RenderTexture2D playbox;
 RenderTexture2D bars;
 Texture2D barstex;
 Texture2D inventory;
+RenderTexture2D rendinvent;
 
 unsigned short * aspA;
 unsigned short * aspB;
@@ -49,13 +51,15 @@ int GetRenderCenterY(void) {
 
 void CreateInterface(void) {
     bars = LoadRenderTexture(ceil((float)RENDERBOXHEIGHT/9) * 16, RENDERBOXHEIGHT);
-    printf("%d \n", bars.texture.width);
     barstex = LoadTexture("assets/textures/interface/game_.png");
+
     inventory = LoadTexture("assets/textures/interface/inventory_.png");
+    rendinvent = LoadRenderTexture(inventory.width, inventory.height);
 }
 
 void UnloadInterface(void) {
     UnloadRenderTexture(bars);
+    UnloadRenderTexture(rendinvent);
     UnloadTexture(barstex);
     UnloadTexture(inventory);
 }
@@ -64,6 +68,21 @@ void DrawInterface(void) {
     DrawTexturePro(bars.texture,
         (Rectangle){0, 0, bars.texture.width, -bars.texture.height},
         (Rectangle){0, 0, GetScreenWidth(), GetScreenHeight()},
+        (Vector2){0, 0},
+        0, WHITE);
+}
+
+void DrawInventory(void) {
+    unsigned short orgwdh = GetScreenWidth() / bars.texture.width;
+    unsigned short orghgt = GetScreenHeight() / bars.texture.height;
+
+    BeginTextureMode(rendinvent);
+        DrawTexture(inventory, 0, 0, WHITE);
+    EndTextureMode();
+    DrawTexturePro(rendinvent.texture,
+        (Rectangle){0, 0, rendinvent.texture.width, -rendinvent.texture.height},
+        (Rectangle){GetScreenWidth()/2 - (rendinvent.texture.width * orgwdh)/2,
+            GetScreenHeight()/12, rendinvent.texture.width * orgwdh, -rendinvent.texture.height * orghgt},
         (Vector2){0, 0},
         0, WHITE);
 }

@@ -23,7 +23,7 @@ TrajLayout LoadTrajFile(char * filename) {
 
         while (fscanf(dottraj, "%f,%f", &trash[l].vect_arr[*venum].x, &trash[l].vect_arr[*venum].y) == 2 
         && !feof(dottraj) && !ferror(dottraj)
-        && *count > 2 && *venum < *count) {
+        && *count >= 2 && *venum < *count) {
             *venum += 1;
         }
 

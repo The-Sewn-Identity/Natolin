@@ -30,8 +30,8 @@ Player CreatePlayer(void) {
     Player pl = {
         .fname = "Stanisław",
         .lname = "Konieczny",
-        .x_pos = GetRenderCenterX() + 140,
-        .y_pos = GetRenderCenterY() + 30,
+        .x_pos = GetRenderCenterX() + 100,
+        .y_pos = GetRenderCenterY() + 10,
         .speed = 20.0f,
         .offset_x = 0,
         .offset_y = 0,
@@ -109,7 +109,7 @@ void GetVectFactor(Player *__player) {
     for (int l=0; l < (*current_traject)[layer].count - 1; l++) {
         if (
             LOCCMP((*current_traject)[layer].vect_arr[l].x, (*current_traject)[layer].vect_arr[l+1].x, __player->rect.x + __player->rect.width/2)
-            && LOCCMP((*current_traject)[layer].vect_arr[l].y, (*current_traject)[layer].vect_arr[l+1].y, __player->rect.y + __player->rect.height/2)
+            //&& LOCCMP((*current_traject)[layer].vect_arr[l].y, (*current_traject)[layer].vect_arr[l+1].y, __player->rect.y + __player->rect.height/2)
         ) {
             x1 = fabsf((*current_traject)[layer].vect_arr[l].x - (*current_traject)[layer].vect_arr[l + 1].x);
             pzpr = PYTHAGORAS(
@@ -121,11 +121,17 @@ void GetVectFactor(Player *__player) {
             __player->vect_factor.yd = (y/x1), __player->vect_factor.yu = -(y/x1);
             break;
         } else {
-            if (__player->rect.x + __player->rect.width/2 < (*current_traject)[layer].vect_arr[l].x) { 
+            if (__player->rect.x + __player->rect.width/2 < svx) { 
                 __player->vect_factor.xl = 0; __player->vect_factor.yd = 0; __player->vect_factor.yu = 0;
             }
-            if (__player->rect.x + __player->rect.width/2 > (*current_traject)[layer].vect_arr[l + 1].x){
+            if (__player->rect.x + __player->rect.width/2 > lvx){
                 __player->vect_factor.xr = 0; __player->vect_factor.yd = 0; __player->vect_factor.yu = 0;
+            }
+            if (__player->rect.y + __player->rect.height/2 > lvy) {
+                __player->vect_factor.yd = 0;
+            }
+            if (__player->rect.y + __player->rect.height/2 < svy) {
+                __player->vect_factor.yu = 0;
             }
             continue;
         }
@@ -162,8 +168,8 @@ void MovePlayer(Player *__player) {
         __player->y_pos += __player->speed * __player->vect_factor.yu * GetFrameTime();
     }
 
-    __player->x_pos = GetMouseX();
-    __player->y_pos = GetMouseY();
+    //__player->x_pos = GetMouseX();
+    //__player->y_pos = GetMouseY();
 }
 
 void Inspect(Player *__player) {
