@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "system_defs.h"
 #include "interface.h"
+#include "colors.h"
+#include "fonts.h"
 #include "util.h"
 
 RenderTexture2D playbox;
@@ -73,16 +75,20 @@ void DrawInterface(void) {
 }
 
 void DrawInventory(void) {
-    unsigned short orgwdh = GetScreenWidth() / bars.texture.width;
-    unsigned short orghgt = GetScreenHeight() / bars.texture.height;
+    float wfactor = (float)GetScreenWidth() / bars.texture.width;
+    Rectangle inventory_rect = {GetScreenWidth()/2 - (rendinvent.texture.width * wfactor)/2,
+        GetScreenHeight()/12, rendinvent.texture.width * wfactor, rendinvent.texture.height * wfactor};
+
+    Vector2 textlen = MeasureTextEx(ModernDOS, "Ekwipunek", 16, 3);
 
     BeginTextureMode(rendinvent);
         DrawTexture(inventory, 0, 0, WHITE);
+        if (CheckCollisionPointRec(GetMousePosition(), inventory_rect)) {
+            DrawText("INSIDE", 20, 20, 56, EINHEIT);
+        }
+        DrawTextEx(ModernDOS, "Ekwipunek", (Vector2){rendinvent.texture.width/2 - textlen.x/2, rendinvent.texture.height - 23}, 16, 3, CIVICYAN);
     EndTextureMode();
-    DrawTexturePro(rendinvent.texture,
-        (Rectangle){0, 0, rendinvent.texture.width, -rendinvent.texture.height},
-        (Rectangle){GetScreenWidth()/2 - (rendinvent.texture.width * orgwdh)/2,
-            GetScreenHeight()/12, rendinvent.texture.width * orgwdh, -rendinvent.texture.height * orghgt},
+    DrawTexturePro(rendinvent.texture, (Rectangle){0, 0, rendinvent.texture.width, -rendinvent.texture.height}, inventory_rect,
         (Vector2){0, 0},
         0, WHITE);
 }

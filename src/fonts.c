@@ -7,11 +7,13 @@
 Font Haettenschweiler;
 Font DokChampa;
 Font Zaklad;
+Font ModernDOS;
 
 FontData font_list[] = {
     {&Haettenschweiler, "HATTEN"},
     {&DokChampa, "dokchampa"},
-    {&Zaklad, "Zaklad-Regular"}
+    {&Zaklad, "Zaklad-Regular"},
+    {&ModernDOS, "ModernDOS8x14"}
 };
 unsigned short font_list_len;
 

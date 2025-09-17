@@ -5,6 +5,7 @@
 #define WALDROT     CLITERAL(Color){193, 0, 16, 255}
 #define PAXVIRID    CLITERAL(Color){71, 133, 91, 255}
 #define PAXBEIGE    CLITERAL(Color){244, 194, 107, 255}
+#define CIVICYAN    CLITERAL(Color){43, 228, 224, 255}
 #define ZSL         CLITERAL(Color){163, 184, 71, 255}
 #define VISTA       CLITERAL(Color){58, 107, 121, 255}
 #define SLOBODA     CLITERAL(Color){26, 128, 154, 255}

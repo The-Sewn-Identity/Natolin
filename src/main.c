@@ -38,7 +38,6 @@ int main(void) {
             BeginTextureMode(bars);
                 ClearBackground(BLANK);
                 DrawTexture(barstex, 0, 0, WHITE);
-                DrawTexture(inventory, bars.texture.width/2 - inventory.width/2, bars.texture.height/12, WHITE);
             EndTextureMode();
             
         }
