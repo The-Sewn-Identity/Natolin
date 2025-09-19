@@ -12,7 +12,7 @@ typedef struct TextureDef {
     short int x_pos;
     short int y_pos;
     void (*feature)(struct TextureDef *);
-    char name[];
+    char * name;
 } TextureDef;
 
 void Open(TextureDef * texdef);

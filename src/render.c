@@ -23,14 +23,15 @@ void CreateLSLTexCont(LSL_Texture_Container tex_cont, LSL_Layout layout) {
                 tex_cont[o][r].y_pos = layout.layers[o][r].y_pos;
                 tex_cont[o][r].rect = (Rectangle){
                     tex_cont[o][r].x_pos, tex_cont[o][r].y_pos,
-                    tex_cont[o][r].tex.width, tex_cont[o][r].tex.height};
-                //snprintf(tex_cont[o][r].feature, sizeof(layout.layers[o][r].feature), layout.layers[o][r].feature);
-                if (strcmp(layout.layers[o][r].feature, "") == 0) {
-                    
+                    tex_cont[o][r].tex.width, tex_cont[o][r].tex.height
+                };
+                tex_cont[o][r].name = layout.layers[o][r].image;
+                if (strcmp(layout.layers[o][r].feature, "OPEN__") == 0) {
+                    tex_cont[o][r].feature = Open;
                 } else if (strcmp(layout.layers[o][r].feature, "NONESSSSS") == 0) {
-                    printf("[[[ %s ]]]\n", layout.layers[o][r].feature);
+                    printf("[[[ %s ]]]\n", tex_cont[o][r].name);
                 } else {
-
+                    tex_cont[o][r].feature = NULL;
                 }
             }
             else {

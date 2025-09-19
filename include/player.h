@@ -26,5 +26,6 @@ void AnimatePlayer(Player *__player);
 void MovePlayer(Player *__player);
 void PlayerCollision(Player *__player);
 void Inspect(Player *__player);
+void Interact(Player *__player);
 
 #endif
