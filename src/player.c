@@ -10,10 +10,6 @@
 #define SHORTDIR "assets/textures/player/%s/%s"
 
 Player current_player;
-float z_speed;
-
-float x1 = 0; float pzpr = 0;
-float y = 0;
 
 void LoadPlayerAnimations(Texture2D *** _animations) {
     // 1st array - Idle animations
@@ -89,39 +85,35 @@ void PlayerCollision(Player * __player) {
 
 void GetVectFactor(Player *__player) {
     unsigned short layer = __player->layer - 1;
+    float x1 = 0; float y = 0; float pzpr = 0;
 
-    unsigned short lvx = (*current_traject)[layer].vect_arr[0].y; unsigned short svx = lvx;
-    unsigned short lvy = (*current_traject)[layer].vect_arr[0].y; unsigned short svy = lvy;
-    /*for (int m=0; m < (*current_traject)[layer].count; m++) { 
-        if (lvx < (*current_traject)[layer].vect_arr[m].x) { lvx = (*current_traject)[layer].vect_arr[m].x; }
-    }
-    for (int m=0; m < (*current_traject)[layer].count; m++) { 
-        if (svx > (*current_traject)[layer].vect_arr[m].x) { svx = (*current_traject)[layer].vect_arr[m].x; }
-    }
-    for (int m=0; m < (*current_traject)[layer].count; m++) { 
-        if (lvy < (*current_traject)[layer].vect_arr[m].y) { lvy = (*current_traject)[layer].vect_arr[m].y; }
-    }
-    for (int m=0; m < (*current_traject)[layer].count; m++) { 
-        if (svy > (*current_traject)[layer].vect_arr[m].y) { svy = (*current_traject)[layer].vect_arr[m].y; }
-    } */
-
-    //printf("[[ %d %d ]]", lvy, svy);
+    float fpx; float npx;
+    float fpy; float npy;
 
     for (int l=0; l < (*current_traject)[layer].count - 1; l++) {
-        x1 = fabsf((*current_traject)[layer].vect_arr[l].x - (*current_traject)[layer].vect_arr[l + 1].x);
-        y = fabsf((*current_traject)[layer].vect_arr[l].y - (*current_traject)[layer].vect_arr[l + 1].y);
-        pzpr = PYTHAGORAS(
-            (*current_traject)[layer].vect_arr[l].x - (*current_traject)[layer].vect_arr[l + 1].x, 
-            (*current_traject)[layer].vect_arr[l].y - (*current_traject)[layer].vect_arr[l + 1].y
-        );
-        if (LOCCMP((*current_traject)[layer].vect_arr[l].x, (*current_traject)[layer].vect_arr[l+1].x, __player->rect.x + __player->rect.width/2) 
-            && LOCCMP((*current_traject)[layer].vect_arr[l].y, (*current_traject)[layer].vect_arr[l+1].y, __player->rect.y + __player->rect.height/2)) {
-            __player->vect_factor.xr = (x1/pzpr); __player->vect_factor.xl = -(x1/pzpr);
-            __player->vect_factor.yd = (y/x1); __player->vect_factor.yu = -(y/x1);
+        fpx = (*current_traject)[layer].vect_arr[l].x; npx = (*current_traject)[layer].vect_arr[l + 1].x;
+        fpy = (*current_traject)[layer].vect_arr[l].y; npy = (*current_traject)[layer].vect_arr[l + 1].y;
+
+        x1 = fabsf(fpx - npx); y = fabsf(fpy - npy);
+        pzpr = PYTHAGORAS(fpx - npx, fpy - npy);
+        
+        if (LOCCMP(fpx, npx, __player->rect.x + __player->rect.width/2) 
+            && LOCCMP(fpy, npy, __player->rect.y + __player->rect.height/2)) {
+            __player->vect_factor.x_right = (x1/pzpr); __player->vect_factor.x_left = -(x1/pzpr);
+            __player->vect_factor.y_down = (y/x1); __player->vect_factor.y_up = -(y/x1);
         } else {
-            __player->vect_factor.xl = 0; __player->vect_factor.xr = 0;
-            __player->vect_factor.yd = 0; __player->vect_factor.yu = 0;
-            //printf("%f\n", (*current_traject)[layer].vect_arr[l].x - __player->rect.x + __player->rect.width/2);
+            if (rhlval(fpx, npx, '>') < __player->rect.x + __player->rect.width/2) {
+                __player->x_pos -= 10;
+            }
+            if (__player->rect.x + __player->rect.width/2 <= rhlval(fpx, npx, '<')) {
+                __player->x_pos += 10;
+            }
+            if (rhlval(fpy, npy, '>' < __player->rect.y + __player->rect.height/2)) {
+                __player->y_pos -= 10;
+            }
+            if (__player->rect.y + __player->rect.height/2 <= rhlval(fpy, npy, '<')) {
+                __player->y_pos += 10;
+            }
         }
     }
 }
@@ -136,24 +128,24 @@ void MovePlayer(Player *__player) {
             __player->offset_z += __player->z_speed
             * GetFrameTime();
         }
-        __player->y_pos += __player->speed * __player->vect_factor.yu * GetFrameTime();
+        __player->y_pos += __player->speed * __player->vect_factor.y_up * GetFrameTime();
     }
     if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) {
         if (__player->layer < 16) {
             __player->offset_z -= __player->z_speed
             * GetFrameTime();
         }
-        __player->y_pos += __player->speed * __player->vect_factor.yd * GetFrameTime();
+        __player->y_pos += __player->speed * __player->vect_factor.y_down * GetFrameTime();
     }
     if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) {
         //if (__player->layer > 1) { __player->offset_z -= 5 * GetFrameTime(); }
-        __player->x_pos += __player->speed * __player->vect_factor.xl * GetFrameTime();
-        __player->y_pos += __player->speed * __player->vect_factor.yd * GetFrameTime();
+        __player->x_pos += __player->speed * __player->vect_factor.x_left * GetFrameTime();
+        __player->y_pos += __player->speed * __player->vect_factor.y_down * GetFrameTime();
     }
     if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) {
         //if (__player->layer > 1) { __player->offset_z -= 5 * GetFrameTime(); }
-        __player->x_pos += __player->speed * __player->vect_factor.xr * GetFrameTime();
-        __player->y_pos += __player->speed * __player->vect_factor.yu * GetFrameTime();
+        __player->x_pos += __player->speed * __player->vect_factor.x_right * GetFrameTime();
+        __player->y_pos += __player->speed * __player->vect_factor.y_up * GetFrameTime();
     }
 
     //__player->x_pos = GetMouseX();
@@ -164,7 +156,7 @@ void Inspect(Player *__player) {
 }
 
 void Interact(Player *__player) {
-    if (IsKeyPressed(KEY_E)) {
+    if (IsKeyPressed(KEY_ENTER)) {
         for (int a=0; a < 16; a++) {
             for (int b=0; b < 64; b++) {
                 if (CheckCollisionRecs(__player->rect, (*current_tex_cont)[a][b].rect)) {

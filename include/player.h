@@ -6,7 +6,7 @@ typedef struct Player {
     Texture2D current_tex;
     Rectangle rect;
     Vector2 vect;
-    struct { float xl; float xr; float yd; float yu; } vect_factor;
+    struct { float x_left; float x_right; float y_down; float y_up; } vect_factor;
     char * fname; char * lname;
     float x_pos; float y_pos;
     float speed; float z_speed; 
