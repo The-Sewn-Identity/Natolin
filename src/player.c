@@ -40,8 +40,8 @@ Player CreatePlayer(void) {
     };
     LoadPlayerAnimations(&pl.animations);
     pl.current_tex = pl.animations[0][0];
-    pl.items[0] = (Item){.itemType = STANDARD, .name = "zbowideagle"};
-    pl.item_count = 10;
+    
+    pl.items[0] = (Item){.item_type = STANDARD, .name = "zbowideagle"}; pl.item_count = 10;
 
     return pl;
 }

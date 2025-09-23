@@ -6,9 +6,9 @@
 
 
 typedef struct TextureDef {
-    short int index;
     Texture2D tex;
     Rectangle rect;
+    short int index;
     short int x_pos;
     short int y_pos;
     void (*feature)(struct TextureDef *);
@@ -16,6 +16,8 @@ typedef struct TextureDef {
 } TextureDef;
 
 void Open(TextureDef * texdef);
+void NextLevel(TextureDef * texdef);
+void DefaultFunc(TextureDef * texdef);
 
 typedef TextureDef LSL_Texture_Container[16][64];
 

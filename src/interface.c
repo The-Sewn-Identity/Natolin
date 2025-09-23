@@ -83,16 +83,16 @@ void DrawInventory(void) {
         GetScreenHeight()/12, rendinvent.texture.width * wfactor, rendinvent.texture.height * wfactor};
 
     Vector2 textlen = MeasureTextEx(ModernDOS, "Ekwipunek", 16, 3);
+    short slot_x = 20; short slot_y = 20;
 
     BeginTextureMode(rendinvent);
         DrawTexture(inventory, 0, 0, WHITE);
         if (CheckCollisionPointRec(GetMousePosition(), inventory_rect)) {
             DrawText("INSIDE", 20, 20, 56, DEMORED);
         }
-        for (int f=20; f < current_player.item_count * res_of_inv_item; f += res_of_inv_item) {
-            if (f == 186) { f += 1; }
-            DrawRectangle(f, 20, 70, 70, EINHEIT);
-            f += 13;
+        for (; slot_x <= 270; slot_x += ((slot_x == 103) ? 84 : 83)) {
+            DrawRectangle(slot_x, slot_y, 70, 70, EINHEIT);
+            if (slot_x == 270 && slot_y == 20) { slot_x = 20; slot_y += 84; }
         }
         DrawTextEx(ModernDOS, "Ekwipunek", (Vector2){rendinvent.texture.width/2 - textlen.x/2, rendinvent.texture.height - 23}, 16, 3, CIVICYAN);
     EndTextureMode();

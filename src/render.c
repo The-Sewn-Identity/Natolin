@@ -11,6 +11,12 @@
 void Open(TextureDef * texdef) {
 }
 
+void NextLevel(TextureDef * texdef) {
+}
+
+void DefaultFunc(TextureDef * texdef) {
+}
+
 void CreateLSLTexCont(LSL_Texture_Container tex_cont, LSL_Layout layout) {
     for (int o=0; o < 16; o++) {
         for (int r=0; r < 64; r++) {
@@ -29,9 +35,10 @@ void CreateLSLTexCont(LSL_Texture_Container tex_cont, LSL_Layout layout) {
                 if (strcmp(layout.layers[o][r].feature, "OPEN__") == 0) {
                     tex_cont[o][r].feature = Open;
                 } else if (strcmp(layout.layers[o][r].feature, "NEXT__LVL") == 0) {
-                    tex_cont[o][r].feature;
+                    tex_cont[o][r].feature = NextLevel;
                 } else if (strcmp(layout.layers[o][r].feature, "NONESSSSS") == 0) {
-                    printf("[[[ %s ]]]\n", tex_cont[o][r].name);
+                    //printf("[[[ %s ]]]\n", tex_cont[o][r].name);
+                    tex_cont[o][r].feature = DefaultFunc;
                 } else {
                     tex_cont[o][r].feature = NULL;
                 }

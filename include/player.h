@@ -8,17 +8,17 @@ typedef struct Player {
     Texture2D ** animations;
     Texture2D current_tex;
     Rectangle rect;
-    Vector2 vect;
     struct { float x_left; float x_right; float y_down; float y_up; } vect_factor;
-    char * fname; char * lname;
+    Vector2 vect;
     float x_pos; float y_pos;
     float speed; float z_speed; 
     float offset_x;
     float offset_y;
     float offset_z;
-    void (*ability)(struct Player *);
     unsigned short layer;
     unsigned short item_count;
+    char * fname; char * lname;
+    void (*ability)(struct Player *);
 } Player;
 extern Player current_player;
 
