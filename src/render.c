@@ -28,6 +28,8 @@ void CreateLSLTexCont(LSL_Texture_Container tex_cont, LSL_Layout layout) {
                 tex_cont[o][r].name = layout.layers[o][r].image;
                 if (strcmp(layout.layers[o][r].feature, "OPEN__") == 0) {
                     tex_cont[o][r].feature = Open;
+                } else if (strcmp(layout.layers[o][r].feature, "NEXT__LVL") == 0) {
+                    tex_cont[o][r].feature;
                 } else if (strcmp(layout.layers[o][r].feature, "NONESSSSS") == 0) {
                     printf("[[[ %s ]]]\n", tex_cont[o][r].name);
                 } else {

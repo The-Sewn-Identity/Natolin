@@ -1,0 +1,23 @@
+# Zakończenia
+
+[Partyzanci]
+    [Przewodniczący Rady Państwa] Mieczysław Moczar
+    [I sekretarz] Zenon Kliszko
+
+    \\ Konsekwencje
+    Do Sejmu dołącza nowa partia - Chrześcijańska Organizacja Polityczna "PAX", kierowana
+    przez Bolesława Piaseckiego. Gdy ZSL i SD tracą mandaty w parlamencie i rządzie,
+    PZPR, ChOP oraz posłowie bezpartyjni je zyskują.
+
+[Status quo]
+    [I sekretarz] Władysław Gomułka
+
+    \\ Konsekwencje
+    Frakcja partyzantów jest zepchnięta na margines, antysyjonistyczna kampania ustaje.
+    Władysław Gomułka pozostaje I sekretarzem i po czasie ustępuje na rzecz Gierka.
+
+[Technokraci]
+    [I sekretarz] Edward Gierek
+
+[Tejchmowcy]
+    [I sekretarz] Józef Tejchma

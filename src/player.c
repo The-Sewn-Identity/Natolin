@@ -35,10 +35,13 @@ Player CreatePlayer(void) {
         .offset_x = 0,
         .offset_y = 0,
         .offset_z = 1,
+        .items = {},
         .ability = Interact
     };
     LoadPlayerAnimations(&pl.animations);
     pl.current_tex = pl.animations[0][0];
+    pl.items[0] = (Item){.itemType = STANDARD, .name = "zbowideagle"};
+    pl.item_count = 10;
 
     return pl;
 }
@@ -95,7 +98,9 @@ void GetVectFactor(Player *__player) {
         fpy = (*current_traject)[layer].vect_arr[l].y; npy = (*current_traject)[layer].vect_arr[l + 1].y;
 
         x1 = fabsf(fpx - npx); y = fabsf(fpy - npy);
-        pzpr = PYTHAGORAS(fpx - npx, fpy - npy);
+        pzpr = PYTHAGORAS(x1, y);
+
+        printf("%d, %d\n", rhlval(fpy, npy, '>'), rhlval(fpy, npy, '<'));
         
         if (LOCCMP(fpx, npx, __player->rect.x + __player->rect.width/2) 
             && LOCCMP(fpy, npy, __player->rect.y + __player->rect.height/2)) {
@@ -103,16 +108,16 @@ void GetVectFactor(Player *__player) {
             __player->vect_factor.y_down = (y/x1); __player->vect_factor.y_up = -(y/x1);
         } else {
             if (rhlval(fpx, npx, '>') < __player->rect.x + __player->rect.width/2) {
-                __player->x_pos -= 10;
+                __player->x_pos -= sqrtf(__player->rect.x + __player->rect.width/2 - rhlval(fpx, npx, '>'));
             }
-            if (__player->rect.x + __player->rect.width/2 <= rhlval(fpx, npx, '<')) {
-                __player->x_pos += 10;
+            if (__player->rect.x + __player->rect.width/2 < rhlval(fpx, npx, '<')) {
+                __player->x_pos += sqrtf(rhlval(fpx, npx, '<') - __player->rect.x + __player->rect.width/2);
             }
-            if (rhlval(fpy, npy, '>' < __player->rect.y + __player->rect.height/2)) {
-                __player->y_pos -= 10;
+            if (rhlval(fpy, npy, '<') > __player->rect.y + __player->rect.height/2) {
+                __player->y_pos += sqrtf(rhlval(fpy, npy, '<') - __player->rect.y + __player->rect.height/2);
             }
-            if (__player->rect.y + __player->rect.height/2 <= rhlval(fpy, npy, '<')) {
-                __player->y_pos += 10;
+            if (__player->rect.y + __player->rect.height/2 > rhlval(fpy, npy, '>')) {
+                __player->y_pos -= sqrtf(__player->rect.y + __player->rect.height/2 - rhlval(fpy, npy, '>'));
             }
         }
     }

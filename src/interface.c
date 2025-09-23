@@ -2,9 +2,12 @@
 #include <stdlib.h>
 #include "system_defs.h"
 #include "interface.h"
+#include "player.h"
 #include "colors.h"
 #include "fonts.h"
 #include "util.h"
+
+#define res_of_inv_item 70
 
 RenderTexture2D playbox;
 RenderTexture2D bars;
@@ -84,7 +87,12 @@ void DrawInventory(void) {
     BeginTextureMode(rendinvent);
         DrawTexture(inventory, 0, 0, WHITE);
         if (CheckCollisionPointRec(GetMousePosition(), inventory_rect)) {
-            DrawText("INSIDE", 20, 20, 56, EINHEIT);
+            DrawText("INSIDE", 20, 20, 56, DEMORED);
+        }
+        for (int f=20; f < current_player.item_count * res_of_inv_item; f += res_of_inv_item) {
+            if (f == 186) { f += 1; }
+            DrawRectangle(f, 20, 70, 70, EINHEIT);
+            f += 13;
         }
         DrawTextEx(ModernDOS, "Ekwipunek", (Vector2){rendinvent.texture.width/2 - textlen.x/2, rendinvent.texture.height - 23}, 16, 3, CIVICYAN);
     EndTextureMode();

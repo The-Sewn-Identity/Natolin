@@ -12,7 +12,7 @@ int main(void) {
     for (int f=16; f > 0; f--) {
         printf("Pos: %f\n", ((float)144/f));
     }
-
+    
     RaylibInitialize();
     MenuLoad();
 

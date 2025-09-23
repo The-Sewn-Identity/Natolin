@@ -1,7 +1,10 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "items.h"
+
 typedef struct Player {
+    Item items[16];
     Texture2D ** animations;
     Texture2D current_tex;
     Rectangle rect;
@@ -10,11 +13,12 @@ typedef struct Player {
     char * fname; char * lname;
     float x_pos; float y_pos;
     float speed; float z_speed; 
-    unsigned short layer;
     float offset_x;
     float offset_y;
     float offset_z;
     void (*ability)(struct Player *);
+    unsigned short layer;
+    unsigned short item_count;
 } Player;
 extern Player current_player;
 
