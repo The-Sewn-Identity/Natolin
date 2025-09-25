@@ -86,6 +86,7 @@ void DrawInventory(void) {
     int slot_x = 20; int slot_y = 20;
 
     BeginTextureMode(rendinvent);
+        ClearBackground(BLANK);
         DrawTexture(inventory, 0, 0, WHITE);
         if (CheckCollisionPointRec(GetMousePosition(), inventory_rect)) {
             DrawText("INSIDE", 20, 20, 56, DEMORED);

@@ -70,11 +70,16 @@ void RenderLevel(LSL_Texture_Container tex_cont) {
             AnimatePlayer(&current_player);
         }
         for (int e=0; e < 64; e++) {
-            if (IsTextureValid(tex_cont[r][e].tex)) { 
-                DrawTexture(tex_cont[r][e].tex, 
-                    tex_cont[r][e].x_pos,
-                    tex_cont[r][e].y_pos,
-                    WHITE); 
+            if (IsTextureValid(tex_cont[r][e].tex)) {
+                if (true) { 
+                    DrawTexture(tex_cont[r][e].tex, 
+                        tex_cont[r][e].x_pos,
+                        tex_cont[r][e].y_pos,
+                        WHITE);
+                }
+                else {
+
+                }
             }
         }
         if (current_player.layer - 1 >= r) {

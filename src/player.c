@@ -9,6 +9,9 @@
 
 #define SHORTDIR "assets/textures/player/%s/%s"
 
+// GET RID OF THE UNDERSCORES SOMEHOW
+// THEY'RE BAD
+
 Player current_player;
 
 void LoadPlayerAnimations(Texture2D *** _animations) {
@@ -102,8 +105,8 @@ void GetVectFactor(Player *__player) {
 
         printf("%d, %d\n", rhlval(fpy, npy, '>'), rhlval(fpy, npy, '<'));
         
-        if (LOCCMP(fpx, npx, __player->rect.x + __player->rect.width/2) 
-            && LOCCMP(fpy, npy, __player->rect.y + __player->rect.height/2)) {
+        if (WITHIN(fpx, npx, __player->rect.x + __player->rect.width/2) 
+            && WITHIN(fpy, npy, __player->rect.y + __player->rect.height/2)) {
             __player->vect_factor.x_right = (x1/pzpr); __player->vect_factor.x_left = -(x1/pzpr);
             __player->vect_factor.y_down = (y/x1); __player->vect_factor.y_up = -(y/x1);
         } else {
@@ -166,8 +169,7 @@ void Interact(Player *__player) {
             for (int b=0; b < 64; b++) {
                 if (CheckCollisionRecs(__player->rect, (*current_tex_cont)[a][b].rect)) {
                     if (a == __player->layer - 1 && (*current_tex_cont)[a][b].feature == Open) {
-                        (*current_tex_cont)[a][b].tex = LoadTexture(TextFormat("assets/textures/levels/PAX_01/%s%s.png",
-                        (*current_tex_cont)[a][b].name, "_open"));
+                        (*current_tex_cont)[a][b].tex;
                     }
                 }
             }

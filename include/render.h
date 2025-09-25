@@ -5,8 +5,8 @@
 #include <lslread.h>
 
 enum TextureIndexes {
-    DEFAULT,
-    OPEN
+    DEFAULT = 0,
+    OPEN = 1,
 };
 
 typedef struct TextureDef {
