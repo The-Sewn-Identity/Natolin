@@ -8,9 +8,11 @@ enum ItemType {
 
 typedef struct Item {
     Texture2D menutex;
-    short item_type;
+    int item_type;
     char * name;
     void (* function)();
 } Item;
+
+Item CreateItem(unsigned int type, char * name, char * fileName);
 
 #endif

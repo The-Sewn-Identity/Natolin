@@ -6,7 +6,7 @@ typedef enum {
     ASPECT_RATIO_WIDESCREEN_16x9,
     ASPECT_RATIO_WIDESCREEN_16x10
 } AspectRatios;
-extern short currentAspectRatio;
+extern int currentAspectRatio;
 
 void SetCurrentAspectRatio(void);
 

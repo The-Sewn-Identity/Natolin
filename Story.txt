@@ -6,8 +6,11 @@
 
     \\ Konsekwencje
     Do Sejmu dołącza nowa partia - Chrześcijańska Organizacja Polityczna "PAX", kierowana
-    przez Bolesława Piaseckiego. Gdy ZSL i SD tracą mandaty w parlamencie i rządzie,
-    PZPR, ChOP oraz posłowie bezpartyjni je zyskują.
+    przez Bolesława Piaseckiego. Gdy ZSL i SD tracą część mandatów w parlamencie i rządzie,
+    PZPR, ChOP oraz posłowie bezpartyjni je zyskują. Piasecki zostaje wicepremierem, a
+    inni paxowcy otrzymują stanowiska państwowe, m.in. ministrów oświaty, kultury i sztuki
+    oraz kierownika Urzędu do Spraw Wyznań.
+    (ChOP, ChOP, hurra!)
 
 [Status quo]
     [I sekretarz] Władysław Gomułka
@@ -19,5 +22,17 @@
 [Technokraci]
     [I sekretarz] Edward Gierek
 
+    \\ Konsekwencje
+    Po nieudanym przewrocie moczarowców, zdyskretowany Gomułka z rekomendacji Moskwy
+    i frakcji tzw. "technokratów" kierowanej przez Edwarda Gierka jest zmuszony
+    do rezygnacji ze stanowiska wiosną 1969 roku.
+
 [Tejchmowcy]
     [I sekretarz] Józef Tejchma
+
+    \\ Konsekwencje
+    Nastroje społeczne są ostudzone, poszczególni moczarowcy są
+    pociągnięci do odpowiedzialności. Partyzanci i skupieni wobec Gierka
+    technokraci przegrywają walkę o kierownictwo partii, w PZPR wciąż wiodą prym
+    umiarkowani, gospodarczo konserwatywni działacze. Jednak po kilku latach,
+    podstarzały już "Wiesław" wyznacza swojego następcę. Jest nim Józef Tejchma.

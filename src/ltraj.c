@@ -10,12 +10,12 @@ TrajLayout LoadTrajFile(char * filename) {
     if (strstr(filename, ".traj") == NULL) { printf("WRONG FILE EXTENSION"), dottraj = NULL; }
 
     TrajLayout trash = malloc(16 * sizeof(Trajectory));
-    unsigned short * count = malloc(sizeof(count));
-    unsigned short * venum = malloc(sizeof(venum));
+    unsigned int * count = malloc(sizeof(count));
+    unsigned int * venum = malloc(sizeof(venum));
 
     for (int l=0; l < 16; l++) {
         *venum = 0;
-        fscanf(dottraj, "%1hu %*1c%*hu", count);
+        fscanf(dottraj, "%1u %*1c%*u", count);
 
         trash[l].count = *count;
         trash[l].layer = l;

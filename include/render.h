@@ -4,13 +4,20 @@
 #include <raylib.h>
 #include <lslread.h>
 
+enum TextureIndexes {
+    DEFAULT,
+    OPEN
+};
 
 typedef struct TextureDef {
-    Texture2D tex;
+    union {
+        Texture2D tex;
+        Texture2D * tex_arr;
+    };
     Rectangle rect;
-    short int index;
-    short int x_pos;
-    short int y_pos;
+    int index;
+    int x_pos;
+    int y_pos;
     void (*feature)(struct TextureDef *);
     char * name;
 } TextureDef;

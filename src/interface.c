@@ -15,14 +15,14 @@ Texture2D barstex;
 Texture2D inventory;
 RenderTexture2D rendinvent;
 
-unsigned short * aspA;
-unsigned short * aspB;
+unsigned int * aspA;
+unsigned int * aspB;
 
 void CreatePlayBox(void) {
     playbox = LoadRenderTexture(RENDERBOXWIDTH, RENDERBOXHEIGHT);
     //SetTextureFilter(playbox.texture, TEXTURE_FILTER_POINT);
-    aspA = malloc(sizeof(unsigned short));
-    aspB = malloc(sizeof(unsigned short));
+    aspA = malloc(sizeof(unsigned int));
+    aspB = malloc(sizeof(unsigned int));
 
     *aspA = 3;
     *aspB = 2;
@@ -83,7 +83,7 @@ void DrawInventory(void) {
         GetScreenHeight()/12, rendinvent.texture.width * wfactor, rendinvent.texture.height * wfactor};
 
     Vector2 textlen = MeasureTextEx(ModernDOS, "Ekwipunek", 16, 3);
-    short slot_x = 20; short slot_y = 20;
+    int slot_x = 20; int slot_y = 20;
 
     BeginTextureMode(rendinvent);
         DrawTexture(inventory, 0, 0, WHITE);
@@ -91,8 +91,8 @@ void DrawInventory(void) {
             DrawText("INSIDE", 20, 20, 56, DEMORED);
         }
         for (; slot_x <= 270; slot_x += ((slot_x == 103) ? 84 : 83)) {
-            DrawRectangle(slot_x, slot_y, 70, 70, EINHEIT);
-            if (slot_x == 270 && slot_y == 20) { slot_x = 20; slot_y += 84; }
+            DrawRectangleLines(slot_x, slot_y, 70, 70, EINHEIT);
+            if (slot_x == 270 && slot_y == 20) { slot_x = 20 - 83; slot_y += 84; }
         }
         DrawTextEx(ModernDOS, "Ekwipunek", (Vector2){rendinvent.texture.width/2 - textlen.x/2, rendinvent.texture.height - 23}, 16, 3, CIVICYAN);
     EndTextureMode();

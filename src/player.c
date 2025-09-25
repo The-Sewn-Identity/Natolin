@@ -41,7 +41,7 @@ Player CreatePlayer(void) {
     LoadPlayerAnimations(&pl.animations);
     pl.current_tex = pl.animations[0][0];
     
-    pl.items[0] = (Item){.item_type = STANDARD, .name = "zbowideagle"}; pl.item_count = 10;
+    pl.items[0] = (Item){.item_type = STANDARD, .name = "zbowideagle"}; pl.item_count = 1;
 
     return pl;
 }
@@ -87,7 +87,7 @@ void PlayerCollision(Player * __player) {
 }
 
 void GetVectFactor(Player *__player) {
-    unsigned short layer = __player->layer - 1;
+    unsigned int layer = __player->layer - 1;
     float x1 = 0; float y = 0; float pzpr = 0;
 
     float fpx; float npx;

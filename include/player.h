@@ -15,8 +15,8 @@ typedef struct Player {
     float offset_x;
     float offset_y;
     float offset_z;
-    unsigned short layer;
-    unsigned short item_count;
+    unsigned int layer;
+    unsigned int item_count;
     char * fname; char * lname;
     void (*ability)(struct Player *);
 } Player;

@@ -3,10 +3,10 @@
 #include "system_defs.h"
 #include "extutil.h"
 
-short currentAspectRatio;
+int currentAspectRatio;
 
-short * CheckAspectRatio() {
-    static short ar[2];
+int * CheckAspectRatio() {
+    static int ar[2];
 
     ar[0] = GetScreenWidth() / nwd(GetScreenWidth(), GetScreenHeight());
     ar[1] = GetScreenHeight() / nwd(GetScreenWidth(), GetScreenHeight());
@@ -15,7 +15,7 @@ short * CheckAspectRatio() {
 }
 
 void SetCurrentAspectRatio(void) {
-    short * ratio = CheckAspectRatio();
+    int * ratio = CheckAspectRatio();
 
     if (ratio[0] == 4 && ratio[1] == 3) {
         currentAspectRatio = ASPECT_RATIO_STANDARD;
