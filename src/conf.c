@@ -25,5 +25,6 @@ void RaylibDeinitialize(void) {
     UnloadPlayBox();
     UnloadInterface();
     FontsUnload();
+    FreeLSLTextCont(PAX_Container_01);
     CloseWindow();
 }

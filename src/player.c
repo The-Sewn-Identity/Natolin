@@ -103,7 +103,7 @@ void GetVectFactor(Player *__player) {
         x1 = fabsf(fpx - npx); y = fabsf(fpy - npy);
         pzpr = PYTHAGORAS(x1, y);
 
-        printf("%d, %d\n", rhlval(fpy, npy, '>'), rhlval(fpy, npy, '<'));
+        //printf("%d, %d\n", rhlval(fpy, npy, '>'), rhlval(fpy, npy, '<'));
         
         if (WITHIN(fpx, npx, __player->rect.x + __player->rect.width/2) 
             && WITHIN(fpy, npy, __player->rect.y + __player->rect.height/2)) {
@@ -169,7 +169,7 @@ void Interact(Player *__player) {
             for (int b=0; b < 64; b++) {
                 if (CheckCollisionRecs(__player->rect, (*current_tex_cont)[a][b].rect)) {
                     if (a == __player->layer - 1 && (*current_tex_cont)[a][b].feature == Open) {
-                        (*current_tex_cont)[a][b].tex;
+                        (*current_tex_cont)[a][b].tex_num = OPEN;
                     }
                 }
             }

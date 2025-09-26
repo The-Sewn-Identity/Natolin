@@ -10,11 +10,9 @@ enum TextureIndexes {
 };
 
 typedef struct TextureDef {
-    union {
-        Texture2D tex;
-        Texture2D * tex_arr;
-    };
+    Texture2D * tex_arr;
     Rectangle rect;
+    unsigned int tex_num;
     int index;
     int x_pos;
     int y_pos;

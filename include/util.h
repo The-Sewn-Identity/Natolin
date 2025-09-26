@@ -15,6 +15,12 @@ enum _RL_types {
     TYPE_TEXTURE2D_PTR = 193
 };
 
-#define typeof(x) (_Generic(x), Texture2D : TYPE_TEXTURE2D, default : 0)
+#define typeof(x) (_Generic((x), Texture2D : TYPE_TEXTURE2D, Texture2D * : TYPE_TEXTURE2D_PTR, default : 0))
+#define ptrlen(type, ptr) ({ \
+    int i = 0; \
+    while (ptr[i] != (type){}) { \
+        i++; \
+    } return i; \
+})
 
 #endif
