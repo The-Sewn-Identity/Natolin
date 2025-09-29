@@ -9,18 +9,14 @@
 
 #define WITHIN(l1, l2, l3) ({ (l1 < l2) ? ((l3 > l1 && l3 <= l2) ? true : false) : ((l3 > l2 && l3 <= l1) ? true : false); })
 int rhlval(int n1, int n2, char op);
+void *nalloc(void *__ptr, size_t __size);
 
 enum _RL_types {
     TYPE_TEXTURE2D = 192,
     TYPE_TEXTURE2D_PTR = 193
 };
 
+#define string_eq(str1, str2) ((strcmp(str1, str2) == 0) ? 1 : 0)
 #define typeof(x) (_Generic((x), Texture2D : TYPE_TEXTURE2D, Texture2D * : TYPE_TEXTURE2D_PTR, default : 0))
-#define ptrlen(type, ptr) ({ \
-    int i = 0; \
-    while (ptr[i] != (type){}) { \
-        i++; \
-    } return i; \
-})
 
 #endif

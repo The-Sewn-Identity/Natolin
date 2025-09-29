@@ -9,7 +9,7 @@ Font DokChampa;
 Font Zaklad;
 Font ModernDOS;
 
-FontData font_list[] = {
+const FontData font_list[] = {
     {&Haettenschweiler, "HATTEN"},
     {&DokChampa, "dokchampa"},
     {&Zaklad, "Zaklad-Regular"},

@@ -9,6 +9,7 @@
 #include "render.h"
 
 void Open(TextureDef * texdef) {
+    texdef->tex_num = OPEN;
 }
 
 void NextLevel(TextureDef * texdef) {
@@ -17,43 +18,40 @@ void NextLevel(TextureDef * texdef) {
 void DefaultFunc(TextureDef * texdef) {
 }
 
+void CreateTextureDef(TextureDef * texdef, LSL_Object * object, char *levelname) {
+    texdef->tex_num = DEFAULT;
+    texdef->index = object->index; texdef->name = object->image;
+    texdef->x_pos = object->x_pos; texdef->y_pos = object->y_pos;
+
+    texdef->tex_arr = malloc(sizeof(Texture2D));
+    texdef->tex_arr[DEFAULT] = LoadTexture(TextFormat("assets/textures/levels/%s/%s.png", levelname, texdef->name));
+    
+    if (string_eq(object->feature, "NONE")) {
+        texdef->feature = DefaultFunc;
+    }
+    else if (string_eq(object->feature, "OPEN")) {
+        texdef->feature = Open;
+
+        texdef->tex_arr = nalloc(texdef->tex_arr, 2 * sizeof(Texture2D));
+        texdef->tex_arr[OPEN] = LoadTexture(TextFormat("assets/textures/levels/%s/%s_open.png", levelname, texdef->name));
+    }
+    else if (string_eq(object->feature, "NEXT__LVL")) {
+        texdef->feature = NextLevel;
+    }
+    else {
+        texdef->feature = NULL;
+    }
+    texdef->rect = (Rectangle){
+        texdef->x_pos, texdef->y_pos,
+        texdef->tex_arr[DEFAULT].width,
+        texdef->tex_arr[DEFAULT].height
+    };
+}
+
 void CreateLSLTexCont(LSL_Texture_Container tex_cont, LSL_Layout layout) {
     for (int o=0; o < 16; o++) {
         for (int r=0; r < 64; r++) {
-            tex_cont[o][r].tex_num = DEFAULT;
-            tex_cont[o][r].index = layout.layers[o][r].index; tex_cont[o][r].name = layout.layers[o][r].image;
-            tex_cont[o][r].x_pos = layout.layers[o][r].x_pos; tex_cont[o][r].y_pos = layout.layers[o][r].y_pos;
-            if (strcmp(layout.layers[o][r].feature, "OPEN") == 0) {
-                tex_cont[o][r].feature = Open;
-                tex_cont[o][r].tex_arr = malloc(2 * sizeof(Texture2D));
-
-                tex_cont[o][r].tex_arr[DEFAULT] = LoadTexture(
-                    TextFormat("assets/textures/levels/%s/%s.png", layout.levelname, layout.layers[o][r].image)
-                );
-                tex_cont[o][r].tex_arr[OPEN] = LoadTexture(
-                    TextFormat("assets/textures/levels/%s/%s_open.png", layout.levelname, layout.layers[o][r].image)
-                );
-                
-            } 
-            else if (strcmp(layout.layers[o][r].feature, "NEXT__LVL") == 0) {
-                tex_cont[o][r].feature = NextLevel;
-            } 
-            else if (strcmp(layout.layers[o][r].feature, "NONE") == 0) {
-                tex_cont[o][r].tex_arr = malloc(sizeof(Texture2D));
-                tex_cont[o][r].tex_arr[DEFAULT] = LoadTexture(
-                    TextFormat("assets/textures/levels/%s/%s.png", layout.levelname, layout.layers[o][r].image)
-                );
-                tex_cont[o][r].feature = DefaultFunc;
-            } 
-            else {
-                tex_cont[o][r].feature = NULL;
-                tex_cont[o][r].tex_arr = malloc(sizeof(Texture2D));
-            }
-            tex_cont[o][r].rect = (Rectangle){
-                tex_cont[o][r].x_pos, tex_cont[o][r].y_pos,
-                tex_cont[o][r].tex_arr[DEFAULT].width,
-                tex_cont[o][r].tex_arr[DEFAULT].height
-            };
+            CreateTextureDef(&tex_cont[o][r], &layout.layers[o][r], layout.levelname);
         }
     }
 }
@@ -61,7 +59,7 @@ void CreateLSLTexCont(LSL_Texture_Container tex_cont, LSL_Layout layout) {
 void FreeLSLTextCont(LSL_Texture_Container tex_cont) {
     for (int f=0; f < 16; f++) {
         for (int r=0; r < 64; r++) {
-            for (int l=0; l < 2; l++) {
+            for (int l=0; IsTextureValid(tex_cont[f][r].tex_arr[l]); l++) {
                 UnloadTexture(tex_cont[f][r].tex_arr[l]);
             }
         }
@@ -80,6 +78,7 @@ void RenderLevel(LSL_Texture_Container tex_cont) {
                     tex_cont[r][e].y_pos,
                     WHITE);
             }
+            //if (tex_cont[r][e].feature != NULL) { tex_cont[r][e].feature(&tex_cont[r][e]); }
         }
         if (current_player.layer - 1 >= r) {
             AnimatePlayer(&current_player);

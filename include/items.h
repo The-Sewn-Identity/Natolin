@@ -13,6 +13,6 @@ typedef struct Item {
     void (* function)();
 } Item;
 
-Item CreateItem(unsigned int type, char * name, char * fileName);
+Item CreateItem(unsigned int type, char * name, char * filename);
 
 #endif
