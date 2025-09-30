@@ -3,6 +3,7 @@
 
 #include <raylib.h>
 #include <lslread.h>
+#include "util.h"
 
 enum TextureIndexes {
     DEFAULT = 0,
@@ -10,7 +11,7 @@ enum TextureIndexes {
 };
 
 typedef struct TextureDef {
-    Texture2D * tex_arr;
+    r_array tex_arr;
     Rectangle rect;
     unsigned int tex_num;
     int index;
