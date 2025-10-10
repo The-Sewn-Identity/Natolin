@@ -8,7 +8,7 @@ enum ItemType {
 
 typedef struct Item {
     Texture2D menutex;
-    int item_type;
+    unsigned int item_type;
     char * name;
     void (* function)();
 } Item;

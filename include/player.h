@@ -2,9 +2,10 @@
 #define PLAYER_H
 
 #include "items.h"
+#include "util.h"
 
 typedef struct Player {
-    Item items[16];
+    r_array items;
     Texture2D ** animations;
     Texture2D current_tex;
     Rectangle rect;
@@ -16,8 +17,8 @@ typedef struct Player {
     float offset_y;
     float offset_z;
     unsigned int layer;
-    unsigned int item_count;
     char * fname; char * lname;
+    void * param;
     void (*ability)(struct Player *);
 } Player;
 extern Player current_player;

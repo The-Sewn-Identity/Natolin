@@ -17,13 +17,13 @@ typedef struct TextureDef {
     int index;
     int x_pos;
     int y_pos;
-    void (*feature)(struct TextureDef *);
+    void (*feature)(struct TextureDef *, void *);
     char * name;
 } TextureDef;
 
-void Open(TextureDef * texdef);
-void NextLevel(TextureDef * texdef);
-void DefaultFunc(TextureDef * texdef);
+void Open(TextureDef * texdef, void * param);
+void NextLevel(TextureDef * texdef, void * param);
+void DefaultFunc(TextureDef * texdef, void * param);
 
 typedef TextureDef LSL_Texture_Container[16][64];
 

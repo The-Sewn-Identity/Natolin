@@ -29,19 +29,21 @@ Player CreatePlayer(void) {
     Player pl = {
         .fname = "Stanisław",
         .lname = "Konieczny",
-        .x_pos = GetRenderCenterX() + 100,
-        .y_pos = GetRenderCenterY() + 50,
+        .x_pos = 240 + 100,
+        .y_pos = 160 + 50,
         .speed = 20.0f,
         .offset_x = 0,
         .offset_y = 0,
         .offset_z = 1,
-        .items = {},
+        .param = NULL,
         .ability = Interact
     };
     LoadPlayerAnimations(&pl.animations);
     pl.current_tex = pl.animations[0][0];
     
-    pl.items[0] = (Item){.item_type = STANDARD, .name = "zbowideagle"}; pl.item_count = 1;
+    pl.items.size = 2 * sizeof(Item); pl.items.array = (Item*)malloc(pl.items.size);
+    ((Item*)pl.items.array)[0] = CreateItem(STANDARD, "the egel", "zbowideagle");
+    ((Item*)pl.items.array)[1] = CreateItem(STANDARD, "le pax", "paxlogo");
 
     return pl;
 }
@@ -101,21 +103,24 @@ void GetVectFactor(Player *_player) {
         pzpr = PYTHAGORAS(x1, y);
         
         if (WITHIN(fpx, npx, _player->rect.x + _player->rect.width/2) 
-            && WITHIN(fpy, npy, _player->rect.y + _player->rect.height/2)) {
+            && WITHIN(fpy, npy, _player->rect.y + _player->rect.height/2))
+        {
             _player->vect_factor.x_right = (x1/pzpr); _player->vect_factor.x_left = -(x1/pzpr);
             _player->vect_factor.y_down = (y/x1); _player->vect_factor.y_up = -(y/x1);
-        } else {
+        }
+        else
+        {
             if (rhlval(fpx, npx, '>') < _player->rect.x + _player->rect.width/2) {
-                _player->x_pos -= sqrtf(_player->rect.x + _player->rect.width/2 - rhlval(fpx, npx, '>'));
+                _player->x_pos -= 0.5f;
             }
             if (_player->rect.x + _player->rect.width/2 < rhlval(fpx, npx, '<')) {
-                _player->x_pos += sqrtf(rhlval(fpx, npx, '<') - _player->rect.x + _player->rect.width/2);
+                _player->x_pos += 0.5f;
             }
             if (rhlval(fpy, npy, '<') > _player->rect.y + _player->rect.height/2) {
-                _player->y_pos += sqrtf(rhlval(fpy, npy, '<') - _player->rect.y + _player->rect.height/2);
+                _player->y_pos += 0.5f;
             }
             if (_player->rect.y + _player->rect.height/2 > rhlval(fpy, npy, '>')) {
-                _player->y_pos -= sqrtf(_player->rect.y + _player->rect.height/2 - rhlval(fpy, npy, '>'));
+                _player->y_pos -= 0.5f;
             }
         }
     }
@@ -159,15 +164,25 @@ void Inspect(Player *_player) {
 }
 
 void Interact(Player *_player) {
-    if (IsKeyPressed(KEY_ENTER)) {
+    if (IsKeyPressed(KEY_ENTER)) 
+    {
         for (int a=0; a < 16; a++) {
-            for (int b=0; b < 64; b++) {
-                if (CheckCollisionRecs(_player->rect, (*current_tex_cont)[a][b].rect)) {
-                    if (a == _player->layer - 1 && (*current_tex_cont)[a][b].feature == Open) {
-                        (*current_tex_cont)[a][b].feature(&(*current_tex_cont)[a][b]);
+            for (int b=0; b < 64; b++){
+                if (CheckCollisionRecs(_player->rect, (*current_tex_cont)[a][b].rect))
+                {
+                    if (a == _player->layer - 1 && (*current_tex_cont)[a][b].feature != NULL) 
+                    {
+                        if ((*current_tex_cont)[a][b].feature == Open) {
+                            _player->param = (bool*)(!_player->param);
+                        }
+                        (*current_tex_cont)[a][b].feature(&(*current_tex_cont)[a][b], _player->param);
                     }
+                }
+                else {
+                    _player->param = NULL;
                 }
             }
         }
     }
+    TraceLog(LOG_INFO, TextFormat("%d", _player->param));
 }

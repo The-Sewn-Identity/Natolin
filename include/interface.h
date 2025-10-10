@@ -1,9 +1,6 @@
 #ifndef INTERFACE_H
 #define INTERFACE_H
 
-// MRB - Main Render Box, if it's that hard for you to remember
-// nevermind
-
 #define RENDERBOXWIDTH 480
 #define RENDERBOXHEIGHT 320
 extern RenderTexture2D playbox;
@@ -21,8 +18,5 @@ void UnloadInterface(void);
 void DrawInterface(void);
 
 void DrawInventory(void);
-
-int GetRenderCenterX(void);
-int GetRenderCenterY(void);
 
 #endif

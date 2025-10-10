@@ -8,14 +8,18 @@
 #include "player.h"
 #include "render.h"
 
-void Open(TextureDef * texdef) {
-    texdef->tex_num = OPEN;
+void Open(TextureDef * texdef, void * param) {
+    if (param) {
+        texdef->tex_num = OPEN;
+    } else {
+        texdef->tex_num = DEFAULT;
+    }
 }
 
-void NextLevel(TextureDef * texdef) {
+void NextLevel(TextureDef * texdef, void * param) {
 }
 
-void DefaultFunc(TextureDef * texdef) {
+void DefaultFunc(TextureDef * texdef, void * param) {
 }
 
 Texture2D * TexArrayVect(r_array tex_array) {

@@ -5,7 +5,7 @@
 #include "conf.h"
 #include "fonts.h"
 
-#define SUBTITLE "Kto nie z Mieciem, tego zmieciem!"
+#define SUBTITLE "Kto nie z Mieciem, tego zmieciem! собрание в России и некоторых странах постсоветского пространства"
 
 Texture2D logo;
 Vector2 textlen;
@@ -26,6 +26,6 @@ void MenuDraw(void) {
         (Vector2){0, 0},
         0, WHITE
     );
-    DrawTextEx(Zaklad, SUBTITLE,
+    DrawTextEx(Haettenschweiler, SUBTITLE,
         (Vector2){GetScreenWidth() / 2 - textlen.x/2, GetScreenHeight() / 3}, GetScreenHeight()/15, 1, WHITE);
 }

@@ -6,15 +6,22 @@
 Item CreateItem(unsigned int type, char * name, char * filename) {
     Item retitem;
     
+    retitem.name = name;
+    retitem.item_type = type;
+
     switch (type) {
         case STANDARD:
             break;
         case STORY:
             break;
         default:
+            retitem.item_type = STANDARD;
             break;
     }
 
-    Texture2D menutex = LoadTexture(TextFormat(filename));
-    return (Item){menutex, type, name, NULL};
+    retitem.menutex = LoadTexture(TextFormat("assets/textures/%s.png", filename));
+
+    retitem.function = NULL;
+
+    return retitem;
 }
