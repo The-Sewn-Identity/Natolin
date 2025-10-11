@@ -45,11 +45,13 @@ void CreateInterface(void) {
     int aspW; int aspH;
     switch (currentAspectRatio) {
         case ASPECT_RATIO_STANDARD:
+            aspW = 4; aspH = 3;
             break;
         case ASPECT_RATIO_WIDESCREEN_16x9:
             aspW = 16; aspH = 9;
             break;
         case ASPECT_RATIO_WIDESCREEN_16x10:
+            aspW = 8; aspH = 5;
             break;
         default:
             break;
