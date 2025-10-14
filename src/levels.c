@@ -28,10 +28,10 @@ void LoadTrajectories(void) {
 
     current_traject = &PAX_Trajectory_01;
 
-    for (int i=0; i < 16; i++) {
-        printf("Count: %hu \n", (*current_traject)[i].count);
-        for (int l=0; l < (*current_traject)[i].count; l++) {
-            printf("Layer:[%hu] %f,%f \n", i, (*current_traject)[i].vect_arr[l].x, (*current_traject)[i].vect_arr[l].y);
-        }
-    }
+    // for (int i=0; i < 16; i++) {
+    //     printf("Count: %hu \n", (*current_traject)[i].count);
+    //     for (int l=0; l < (*current_traject)[i].count; l++) {
+    //         printf("Layer:[%hu] %f,%f \n", i, (*current_traject)[i].vect_arr[l].x, (*current_traject)[i].vect_arr[l].y);
+    //     }
+    // }
 }

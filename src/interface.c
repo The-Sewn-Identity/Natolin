@@ -122,12 +122,12 @@ void DrawInventory(void) {
             }
             if (slot_x == 270 && slot_y == 20) { slot_x = 20 - 83; slot_y += 84; }
         }
-        textlen = MeasureTextEx(ModernDOS, inv_text, 16, 3);
+        textlen = MeasureTextEx(ModernDOS, inv_text, 17, 3);
         DrawTextEx(ModernDOS, inv_text, 
             (Vector2){
                 rendinvent.texture.width/2 - textlen.x/2,
                 rendinvent.texture.height - 23
-            }, 16, 3, CIVICYAN
+            }, 17, 3, CIVICYAN
         );
     EndTextureMode();
     

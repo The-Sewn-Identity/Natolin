@@ -26,6 +26,16 @@ Texture2D * TexArrayVect(r_array tex_array) {
     return ((Texture2D*)tex_array.array);
 }
 
+Texture2D PassValidTexture(const char *filename) {
+    if (FileExists(filename)) {
+        return LoadTexture(filename);
+    }
+    else {
+        // TraceLog(LOG_WARNING, TextFormat("FAILED TO LOAD TEXTURE: %s", filename));
+        return (Texture2D){};
+    }
+}
+
 void CreateTextureDef(TextureDef * texdef, LSL_Object * object, char *levelname) {
     texdef->tex_num = DEFAULT;
     texdef->index = object->index; texdef->name = object->image;
@@ -33,7 +43,7 @@ void CreateTextureDef(TextureDef * texdef, LSL_Object * object, char *levelname)
 
     texdef->tex_arr.size = sizeof(Texture2D);
     texdef->tex_arr.array = malloc(texdef->tex_arr.size);
-    ((Texture2D*)texdef->tex_arr.array)[DEFAULT] = LoadTexture(TextFormat("assets/textures/levels/%s/%s.png",
+    ((Texture2D*)texdef->tex_arr.array)[DEFAULT] = PassValidTexture(TextFormat("assets/textures/levels/%s/%s.png",
             levelname, texdef->name));
     
     if (string_eq(object->feature, "NONE")) {
@@ -44,7 +54,7 @@ void CreateTextureDef(TextureDef * texdef, LSL_Object * object, char *levelname)
 
         texdef->tex_arr.size = 2 * sizeof(Texture2D);
         texdef->tex_arr.array = nalloc(texdef->tex_arr.array, texdef->tex_arr.size);
-        ((Texture2D*)texdef->tex_arr.array)[OPEN] = LoadTexture(TextFormat("assets/textures/levels/%s/%s_open.png",
+        ((Texture2D*)texdef->tex_arr.array)[OPEN] = PassValidTexture(TextFormat("assets/textures/levels/%s/%s_open.png",
                 levelname, texdef->name));
     }
     else if (string_eq(object->feature, "NEXT__LVL")) {
@@ -53,6 +63,7 @@ void CreateTextureDef(TextureDef * texdef, LSL_Object * object, char *levelname)
     else {
         texdef->feature = NULL;
     }
+
     texdef->rect = (Rectangle){
         texdef->x_pos, texdef->y_pos,
         ((Texture2D*)texdef->tex_arr.array)[DEFAULT].width,

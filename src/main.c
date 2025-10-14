@@ -4,15 +4,12 @@
 #include "colors.h"
 #include "levels.h"
 #include "player.h"
+#include "speech.h"
 #include "interface.h"
 #include <stdio.h>
 #include "util.h"
 
-int main(void) {
-    for (int f=16; f > 0; f--) {
-        printf("Pos: %f\n", ((float)144/f));
-    }
-    
+int main(void) {    
     RaylibInitialize();
     MenuLoad();
 
@@ -40,7 +37,6 @@ int main(void) {
                 ClearBackground(BLANK);
                 DrawTexture(barstex, 0, 0, WHITE);
             EndTextureMode();
-            
         }
         
         BeginDrawing();
@@ -51,6 +47,7 @@ int main(void) {
                 if (IsKeyDown(KEY_T)) { DrawInventory(); }
             }
             if (IsKeyDown(KEY_L)) { MenuDraw(); }
+            //DrawTextbox("Hej tutaj Mieczysław Moczar, zmieciem was czy coś", (Vector2){20, 20}, NORMAL);
         EndDrawing();
     };
 

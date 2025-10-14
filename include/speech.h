@@ -3,11 +3,14 @@
 
 #include <raylib.h>
 
-typedef struct Textbox {
-    Rectangle rect;
-    unsigned int mode;
-} Textbox;
+enum TextboxModes {
+    NORMAL,
+    INFO,
+    SPEECH,
+    THOUGHT,
+    ACHIEVEMENT
+};
 
-void DrawSpeechBox(void);
+void DrawTextbox(char *text, Vector2 position, unsigned int mode);
 
 #endif
