@@ -47,7 +47,7 @@ int main(void) {
                 if (IsKeyDown(KEY_T)) { DrawInventory(); }
             }
             if (IsKeyDown(KEY_L)) { MenuDraw(); }
-            //DrawTextbox("Hej tutaj Mieczysław Moczar, zmieciem was czy coś", (Vector2){20, 20}, NORMAL);
+            DrawTextbox("Hej tutaj Mieczysław Moczar, zmieciem was czy coś", (Vector2){20, 20}, NORMAL);
         EndDrawing();
     };
 

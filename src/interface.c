@@ -46,9 +46,11 @@ void CreateInterface(void) {
     switch (currentAspectRatio) {
         case ASPECT_RATIO_STANDARD:
             aspW = 4; aspH = 3;
+            barstex = LoadTexture("assets/textures/interface/game_STANDARD.png");
             break;
         case ASPECT_RATIO_WIDESCREEN_16x9:
             aspW = 16; aspH = 9;
+            barstex = LoadTexture("assets/textures/interface/game_WIDESCREEN_16x9.png");
             break;
         case ASPECT_RATIO_WIDESCREEN_16x10:
             aspW = 8; aspH = 5;
@@ -57,7 +59,7 @@ void CreateInterface(void) {
             break;
     }
     bars = LoadRenderTexture(ceil((float)RENDERBOXHEIGHT/aspH) * aspW, RENDERBOXHEIGHT);
-    barstex = LoadTexture("assets/textures/interface/game_.png");
+    printf("WOOOOO:%d %d \n", bars.texture.width, bars.texture.height);
 
     inventory = LoadTexture("assets/textures/interface/inventory_.png");
     rendinvent = LoadRenderTexture(inventory.width, inventory.height);
