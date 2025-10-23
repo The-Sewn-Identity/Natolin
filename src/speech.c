@@ -14,6 +14,7 @@ void DrawTextbox(char *text, Vector2 position, unsigned int mode) {
     switch (mode) {
         case NORMAL:
             font_size = 72;
+            border = 8;
             break;
         case INFO:
             font_size = 14;
@@ -28,14 +29,15 @@ void DrawTextbox(char *text, Vector2 position, unsigned int mode) {
             font_size = 20;
             break;
         default:
+            border = 2;
             break;
     }
 
     Vector2 textlen = MeasureTextEx(Haettenschweiler, text, font_size, DEFAULT_SPACING);
-    width = textlen.x + 20; height = textlen.y + 20;
+    width = textlen.x; height = textlen.y;
     
-    Rectangle outrect = (Rectangle){locx, locy, width, height};
-    Rectangle inrect = (Rectangle){locx + border/2, locy + border/2, width - border, height - border};
+    Rectangle outrect = (Rectangle){locx - border/2, locy - border/2, width + border, height + border};
+    Rectangle inrect = (Rectangle){locx, locy, width, height};
 
     DrawRectangleRec(outrect, BLACK);
     DrawRectangleRec(inrect, WHITE);

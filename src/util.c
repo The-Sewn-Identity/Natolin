@@ -20,3 +20,24 @@ void *nalloc(void *__ptr, size_t __size) {
     if (nptr != NULL) { __ptr = nptr; }
     return __ptr;
 }
+
+Vector2 VectOperation(Vector2 vect, float factor, char op) {
+    if (factor == 0) { factor++; }
+    switch (op) {
+        case '+':
+            vect.x += factor; vect.y += factor;
+            break;
+        case '-':
+            vect.x -= factor; vect.y -= factor;
+            break;
+        case '*':
+            vect.x *= factor; vect.y *= factor;
+            break;
+        case '/':
+            vect.x /= factor; vect.y /= factor;
+            break;
+        default:
+            break;
+    }
+    return vect;
+}

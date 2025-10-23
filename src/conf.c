@@ -13,7 +13,6 @@ void RaylibInitialize(void) {
     SetTargetFPS(DEFAULT_FPS);
 
     SetCurrentAspectRatio();
-    CreatePlayBox();
     CreateInterface();
 
     LoadTextureContainers();
@@ -22,8 +21,7 @@ void RaylibInitialize(void) {
 }
 
 void RaylibDeinitialize(void) {
-    UnloadPlayBox();
-    UnloadInterface();
+    CreateInterface();
     FontsUnload();
     FreeLSLTextCont(PAX_Container_01);
     CloseWindow();

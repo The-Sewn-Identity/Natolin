@@ -15,6 +15,9 @@ void *nalloc(void *__ptr, size_t __size);
 /* A pointer array with specified length */
 typedef struct r_array { void * array; size_t size; } r_array;
 
+/* Do an operation on a Vector2 */
+Vector2 VectOperation(Vector2 vect, float factor, char op);
+
 enum _basic_types {
     TYPE_DEFAULT = 0,
     TYPE_INT,

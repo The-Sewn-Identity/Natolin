@@ -13,6 +13,8 @@ int main(void) {
     RaylibInitialize();
     MenuLoad();
 
+    printf("mWIDTH: %d\n", GetMonitorHeight(GetCurrentMonitor()));
+
     Color default_fill_color = PAXBEIGE;
     bool launched = true;
 
@@ -35,19 +37,19 @@ int main(void) {
 
             BeginTextureMode(bars);
                 ClearBackground(BLANK);
-                DrawTexture(barstex, 0, 0, WHITE);
+                DrawTexture(bars_tex, 0, 0, WHITE);
             EndTextureMode();
         }
         
         BeginDrawing();
             ClearBackground(PAXVIRID);
             if (launched) {
-                DrawPlayBox();
-                DrawInterface();
+                DrawPlaybox();
+                DrawPanel();
                 if (IsKeyDown(KEY_T)) { DrawInventory(); }
             }
             if (IsKeyDown(KEY_L)) { MenuDraw(); }
-            DrawTextbox("Hej tutaj Mieczysław Moczar, zmieciem was czy coś", (Vector2){20, 20}, NORMAL);
+            //DrawTextbox("Sample text", GetMousePosition(), NORMAL);
         EndDrawing();
     };
 

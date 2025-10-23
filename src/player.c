@@ -184,5 +184,5 @@ void Interact(Player *_player) {
             }
         }
     }
-    //TraceLog(LOG_INFO, TextFormat("%d", _player->param));
+    //TraceLog(LOG_INFO, TextFormat("%d,  %d", _player->layer, _player->param));
 }
