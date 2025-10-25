@@ -13,8 +13,6 @@ int main(void) {
     RaylibInitialize();
     MenuLoad();
 
-    printf("mWIDTH: %d\n", GetMonitorHeight(GetCurrentMonitor()));
-
     Color default_fill_color = PAXBEIGE;
     bool launched = true;
 
@@ -35,24 +33,30 @@ int main(void) {
                     current_player.rect.x + current_player.rect.width/2, current_player.rect.y + current_player.rect.height/2), 10, 40, 10, SLOBODA);
             EndTextureMode();
 
-            BeginTextureMode(bars);
-                ClearBackground(BLANK);
-                DrawTexture(bars_tex, 0, 0, WHITE);
-            EndTextureMode();
+            DrawPanel();
+            DrawInventory();
+            DrawInterface();
         }
         
         BeginDrawing();
             ClearBackground(PAXVIRID);
             if (launched) {
                 DrawPlaybox();
-                DrawPanel();
-                if (IsKeyDown(KEY_T)) { DrawInventory(); }
+                DrawTexturePro(interface.texture,
+                    (Rectangle){0, 0, interface.texture.width, -interface.texture.height},
+                    (Rectangle){0, 0, GetScreenWidth(), GetScreenHeight()},
+                    (Vector2){0, 0},
+                    0, WHITE
+                );
             }
             if (IsKeyDown(KEY_L)) { MenuDraw(); }
-            //DrawTextbox("Sample text", GetMousePosition(), NORMAL);
         EndDrawing();
     };
 
     RaylibDeinitialize();
     return 0;
 }
+
+// add a draw game function or something
+// inline int RenderGame() {    
+// }

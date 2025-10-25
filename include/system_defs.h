@@ -1,13 +1,15 @@
 #ifndef SYSTEM_DEFS_H
 #define SYSTEM_DEFS_H
 
-typedef enum {
+enum AspectRatios {
     ASPECT_RATIO_STANDARD,
     ASPECT_RATIO_WIDESCREEN_16x9,
-    ASPECT_RATIO_WIDESCREEN_16x10
-} AspectRatios;
-extern int currentAspectRatio;
+    ASPECT_RATIO_WIDESCREEN_16x10,
+    ASPECT_RATIO_COUNT
+};
+extern enum AspectRatios currentAspectRatio;
 
 void SetCurrentAspectRatio(void);
+void FollowMouse(void);
 
 #endif

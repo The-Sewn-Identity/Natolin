@@ -3,19 +3,13 @@
 #include "system_defs.h"
 #include "extutil.h"
 
-int currentAspectRatio;
-
-int * CheckAspectRatio() {
-    static int ar[2];
-
-    ar[0] = GetScreenWidth() / nwd(GetScreenWidth(), GetScreenHeight());
-    ar[1] = GetScreenHeight() / nwd(GetScreenWidth(), GetScreenHeight());
-
-    return ar;
-}
+enum AspectRatios currentAspectRatio;
 
 void SetCurrentAspectRatio(void) {
-    int * ratio = CheckAspectRatio();
+    int ratio[2] = { 
+        GetScreenWidth() / nwd(GetScreenWidth(), GetScreenHeight()),
+        GetScreenHeight() / nwd(GetScreenWidth(), GetScreenHeight())
+    };
 
     if (ratio[0] == 4 && ratio[1] == 3) {
         currentAspectRatio = ASPECT_RATIO_STANDARD;
@@ -26,4 +20,11 @@ void SetCurrentAspectRatio(void) {
     else if (ratio[0] == 8 && ratio[1] == 5) {
         currentAspectRatio = ASPECT_RATIO_WIDESCREEN_16x10;
     }
+    else {
+        currentAspectRatio = ASPECT_RATIO_STANDARD;
+    }
+}
+
+void FollowMouse(void) {
+    
 }

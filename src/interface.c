@@ -10,61 +10,62 @@
 #include "fonts.h"
 #include "util.h"
 
-#define bar_width 48
 #define res_of_inv_item 70
 
+int bars_width = 0, bars_height = 0;
+int playbox_offset_x = 0, playbox_offset_y = 0;
+
+int interface_ar_factor = 0;
+
 RenderTexture2D playbox;
-RenderTexture2D bars;
+
+RenderTexture2D panel;
 RenderTexture2D inventory;
-Texture2D bars_tex;
+RenderTexture2D interface;
+Texture2D panel_tex;
 Texture2D inventory_tex;
 
-void CreatePlaybox(void) {
-    playbox = LoadRenderTexture(RENDERBOXWIDTH, RENDERBOXHEIGHT);
-}
+// move playbox functions somewhere else
 
 void DrawPlaybox(void) {
     DrawTexturePro(playbox.texture, 
         (Rectangle){0, 0, playbox.texture.width, -playbox.texture.height}, 
-        (Rectangle){0, 0,
-            GetScreenWidth(), GetScreenHeight()}, 
+        (Rectangle){playbox_offset_x * interface_ar_factor, 0, 
+            RENDERBOXWIDTH * interface_ar_factor + bars_width * interface_ar_factor, GetScreenHeight()}, 
         (Vector2){0, 0}, 
         0, WHITE);
 }
 
-void UnloadPlaybox(void) {
-    UnloadRenderTexture(playbox);
-}
-
 void CreatePanel(void) {
+    Texture2D panels_arr[ASPECT_RATIO_COUNT];
+
+    panels_arr[ASPECT_RATIO_STANDARD] = LoadTexture("assets/textures/interface/game_STANDARD.png");
+    panels_arr[ASPECT_RATIO_WIDESCREEN_16x9] = LoadTexture("assets/textures/interface/game_WIDESCREEN_16x9.png");
+    panels_arr[ASPECT_RATIO_WIDESCREEN_16x10] = LoadTexture("assets/textures/interface/game_WIDESCREEN_16x10.png");
+
     switch (currentAspectRatio) {
         case ASPECT_RATIO_STANDARD:
-            bars_tex = LoadTexture("assets/textures/interface/game_STANDARD.png");
+            bars_height = 48;
             break;
         case ASPECT_RATIO_WIDESCREEN_16x9:
-            bars_tex = LoadTexture("assets/textures/interface/game_WIDESCREEN_16x9.png");
+            playbox_offset_x = 48;
+            bars_width = playbox_offset_x * 2;
             break;
         case ASPECT_RATIO_WIDESCREEN_16x10:
-            break;
-        default:
+            bars_width = 32;
             break;
     }
 
-    bars = LoadRenderTexture(bars_tex.width, bars_tex.height);
-}
+    panel_tex = panels_arr[currentAspectRatio];
 
-void UnloadPanel(void) {
-    UnloadRenderTexture(bars);
-    UnloadTexture(bars_tex);
+    panel = LoadRenderTexture(panel_tex.width, panel_tex.height);
 }
 
 void DrawPanel(void) {
-    DrawTexturePro(bars.texture,
-        (Rectangle){0, 0, bars.texture.width, -bars.texture.height},
-        (Rectangle){0, 0, GetScreenWidth(), GetScreenHeight()},
-        (Vector2){0, 0},
-        0, WHITE
-    );
+    BeginTextureMode(panel);
+        ClearBackground(BLANK);
+        DrawTexture(panel_tex, 0, 0, WHITE);
+    EndTextureMode();
 }
 
 void CreateInventory(void) {
@@ -72,21 +73,23 @@ void CreateInventory(void) {
     inventory = LoadRenderTexture(inventory_tex.width, inventory_tex.height);
 }
 
+// MAKE THE INTERFACE BE ONE RENDERTEXTURE
+// why didn't i do this before idk
+
 void DrawInventory(void) {
-    float wfactor = (float)GetScreenWidth() / bars.texture.width;
-    int slot_x = 20; int slot_y = 20;
+    int slot_x = 20, slot_y = 20;
 
     Rectangle inventory_rect = {
-        GetScreenWidth()/2 - (inventory.texture.width * wfactor)/2,
-        GetScreenHeight()/12, inventory.texture.width * wfactor, 
-        inventory.texture.height * wfactor
+        RENDERBOXWIDTH/2 - inventory_tex.width/2,
+        RENDERBOXHEIGHT/12, 
+        inventory_tex.width, inventory_tex.height
     };
     
     char * inv_text = "Ekwipunek";
     bool display_text = false;
     Vector2 textlen;
     
-    int scr_inv_rat = (float)bars_tex.height / inventory_tex.height;
+    int scr_inv_rat = (float) GetScreenHeight() / interface.texture.height;
     Vector2 mousevect;
     
     Item * items = ((Item*)current_player.items.array);
@@ -105,20 +108,18 @@ void DrawInventory(void) {
             if (a < current_player.items.size / sizeof(Item))
             {
                 DrawTexturePro(items[a].menutex,
-                    (Rectangle){0, 0, items[a].menutex.width, items[a].menutex.height },
+                    (Rectangle){0, 0, items[a].menutex.width, items[a].menutex.height},
                     (Rectangle){slot_x, slot_y, 68, 68},
                     (Vector2){0, 0}, 0, WHITE
                 );
 
-                Rectangle irect = (Rectangle){
-                    inventory_rect.x + slot_x * wfactor, 
-                    inventory_rect.y + slot_y * wfactor, 
-                    68 * wfactor, 68 * wfactor
+                Rectangle item_rect = (Rectangle){
+                    playbox_offset_x + (RENDERBOXWIDTH - inventory_rect.width)/2 + inventory_rect.x + slot_x, 
+                    playbox_offset_y + inventory_rect.y + slot_y, 
+                    68, 68
                 };
-
-                // mouse pos on screen doesn't align with mouse pos in window
                 
-                if (CheckCollisionPointRec(GetMousePosition(), irect)) 
+                if (CheckCollisionPointRec(mousevect, item_rect)) 
                 {
                     inv_text = items[a].name;
                     DrawTextbox(inv_text, mousevect, INFO);
@@ -138,29 +139,51 @@ void DrawInventory(void) {
         );
 
     EndTextureMode();
-    
-    DrawTexturePro(inventory.texture,
-        (Rectangle){0, 0, inventory.texture.width, -inventory.texture.height}, 
-        (Rectangle)inventory_rect,
-        (Vector2){0, 0},
-        0, WHITE
-    );
 }
-
-void UnloadInventory() {
-    UnloadRenderTexture(inventory);
-    UnloadTexture(inventory_tex);
-}
-
 
 void CreateInterface(void) {
-    CreatePlaybox();
     CreatePanel();
     CreateInventory();
+    interface = LoadRenderTexture(RENDERBOXWIDTH + bars_width, RENDERBOXHEIGHT + bars_height);
+    interface_ar_factor = (float) GetScreenHeight() / interface.texture.height;
+
+    playbox = LoadRenderTexture(RENDERBOXWIDTH, RENDERBOXHEIGHT);
+}
+
+void DrawInterface(void) {
+    BeginTextureMode(interface);
+        ClearBackground(BLANK);
+
+        DrawTexturePro(panel.texture,
+            (Rectangle){0, 0, panel.texture.width, -panel.texture.height},
+            (Rectangle){0, 0, interface.texture.width, interface.texture.height},
+            (Vector2){0, 0},
+            0, WHITE
+        );
+        
+        if (IsKeyDown(KEY_T)) {
+            DrawTexturePro(inventory.texture,
+                (Rectangle){0, 0, inventory.texture.width, -inventory.texture.height}, 
+                (Rectangle){
+                    playbox_offset_x + RENDERBOXWIDTH/2 - inventory_tex.width/2,
+                    playbox_offset_y + RENDERBOXHEIGHT/12, 
+                    inventory_tex.width, inventory_tex.height
+                },
+                (Vector2){0, 0},
+                0, WHITE
+            );
+        }
+
+    EndTextureMode();
 }
 
 void UnloadInterface(void) {
-    UnloadPlaybox();
-    UnloadPanel();
-    UnloadInventory();
+    UnloadRenderTexture(playbox);
+
+    UnloadRenderTexture(interface);
+    UnloadRenderTexture(inventory);
+    UnloadRenderTexture(panel);
+
+    UnloadTexture(inventory_tex);
+    UnloadTexture(panel_tex);
 }
