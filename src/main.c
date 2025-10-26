@@ -22,8 +22,6 @@ int main(void) {
         if (launched) {
             BeginTextureMode(playbox);
                 ClearBackground(default_fill_color);
-                if (IsKeyPressed(KEY_T) && !launched) {
-                }
                 RenderLevel(*current_tex_cont);
                 UpdatePlayer(&current_player);
                 DrawText(TextFormat("Layer %d", current_player.layer), 10, 0, 10, SLOBODA);

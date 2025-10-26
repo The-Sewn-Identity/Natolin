@@ -15,7 +15,8 @@
 int bars_width = 0, bars_height = 0;
 int playbox_offset_x = 0, playbox_offset_y = 0;
 
-int interface_ar_factor = 0;
+float interface_ar_factor_w = 0;
+float interface_ar_factor_h = 0;
 
 RenderTexture2D playbox;
 
@@ -25,13 +26,20 @@ RenderTexture2D interface;
 Texture2D panel_tex;
 Texture2D inventory_tex;
 
+
+IButton ibuttons_arr[];
+
 // move playbox functions somewhere else
 
 void DrawPlaybox(void) {
     DrawTexturePro(playbox.texture, 
         (Rectangle){0, 0, playbox.texture.width, -playbox.texture.height}, 
-        (Rectangle){playbox_offset_x * interface_ar_factor, 0, 
-            RENDERBOXWIDTH * interface_ar_factor + bars_width * interface_ar_factor, GetScreenHeight()}, 
+        (Rectangle){
+            playbox_offset_x * interface_ar_factor_w, 
+            playbox_offset_y * interface_ar_factor_h,
+            RENDERBOXWIDTH * interface_ar_factor_w,
+            RENDERBOXHEIGHT * interface_ar_factor_h
+        }, 
         (Vector2){0, 0}, 
         0, WHITE);
 }
@@ -45,7 +53,7 @@ void CreatePanel(void) {
 
     switch (currentAspectRatio) {
         case ASPECT_RATIO_STANDARD:
-            bars_height = 48;
+            bars_height = 40;
             break;
         case ASPECT_RATIO_WIDESCREEN_16x9:
             playbox_offset_x = 48;
@@ -78,6 +86,7 @@ void CreateInventory(void) {
 
 void DrawInventory(void) {
     int slot_x = 20, slot_y = 20;
+    char * inv_text = "Ekwipunek";
 
     Rectangle inventory_rect = {
         RENDERBOXWIDTH/2 - inventory_tex.width/2,
@@ -85,11 +94,9 @@ void DrawInventory(void) {
         inventory_tex.width, inventory_tex.height
     };
     
-    char * inv_text = "Ekwipunek";
     bool display_text = false;
     Vector2 textlen;
     
-    int scr_inv_rat = (float) GetScreenHeight() / interface.texture.height;
     Vector2 mousevect;
     
     Item * items = ((Item*)current_player.items.array);
@@ -100,8 +107,8 @@ void DrawInventory(void) {
         DrawTexture(inventory_tex, 0, 0, WHITE);
 
         mousevect = (Vector2){
-            inventory_rect.x + GetMousePosition().x / scr_inv_rat,
-            inventory_rect.y + GetMousePosition().y / scr_inv_rat
+            GetMousePosition().x / interface_ar_factor_w,
+            GetMousePosition().y / interface_ar_factor_h
         };
         
         for (; slot_x <= 270; slot_x += ((slot_x == 103) ? 84 : 83)) {
@@ -114,7 +121,7 @@ void DrawInventory(void) {
                 );
 
                 Rectangle item_rect = (Rectangle){
-                    playbox_offset_x + (RENDERBOXWIDTH - inventory_rect.width)/2 + inventory_rect.x + slot_x, 
+                    playbox_offset_x + inventory_rect.x + slot_x, 
                     playbox_offset_y + inventory_rect.y + slot_y, 
                     68, 68
                 };
@@ -122,11 +129,22 @@ void DrawInventory(void) {
                 if (CheckCollisionPointRec(mousevect, item_rect)) 
                 {
                     inv_text = items[a].name;
-                    DrawTextbox(inv_text, mousevect, INFO);
+                    display_text = true;
                 }
                 a++;
             }
             if (slot_x == 270 && slot_y == 20) { slot_x = 20 - 83; slot_y += 84; }
+        }
+
+        if (display_text)
+        { 
+            DrawTextbox(inv_text,
+                (Vector2){
+                    mousevect.x - (playbox_offset_x + inventory_rect.x),
+                    mousevect.y - (playbox_offset_y + inventory_rect.y)
+                },
+                INFO
+            );
         }
 
         textlen = MeasureTextEx(ModernDOS, inv_text, 17, 3);
@@ -145,7 +163,8 @@ void CreateInterface(void) {
     CreatePanel();
     CreateInventory();
     interface = LoadRenderTexture(RENDERBOXWIDTH + bars_width, RENDERBOXHEIGHT + bars_height);
-    interface_ar_factor = (float) GetScreenHeight() / interface.texture.height;
+    interface_ar_factor_w = (float) GetScreenWidth() / interface.texture.width;
+    interface_ar_factor_h = (float) GetScreenHeight() / interface.texture.height; // width factor is more accurate
 
     playbox = LoadRenderTexture(RENDERBOXWIDTH, RENDERBOXHEIGHT);
 }

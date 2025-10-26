@@ -21,7 +21,8 @@ void *nalloc(void *__ptr, size_t __size) {
     return __ptr;
 }
 
-Vector2 VectOperation(Vector2 vect, float factor, char op) {
+Vector2 VectOperation(Vector2 vector, float factor, char op) {
+    Vector2 vect = vector;
     if (factor == 0) { factor++; }
     switch (op) {
         case '+':
