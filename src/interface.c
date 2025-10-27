@@ -18,7 +18,7 @@ int playbox_offset_x = 0, playbox_offset_y = 0;
 float interface_ar_factor_w = 0;
 float interface_ar_factor_h = 0;
 
-RenderTexture2D playbox;
+Playbox playbox;
 
 RenderTexture2D panel;
 RenderTexture2D inventory;
@@ -26,17 +26,24 @@ RenderTexture2D interface;
 Texture2D panel_tex;
 Texture2D inventory_tex;
 
+void CheckEquipmentButton(void) {
 
-IButton ibuttons_arr[];
+}
+
+IButton ibuttons_arr[] = {
+    { .tex_arr = {{0}, {0}}, .vect = {0, 0}, "teq", false, CheckEquipmentButton },
+    { .tex_arr = {{0}, {0}}, .vect = {0, 0}, "...", false, CheckEquipmentButton }
+};
+const unsigned int ibutton_count = ARRAYSIZE(ibuttons_arr);
 
 // move playbox functions somewhere else
 
 void DrawPlaybox(void) {
-    DrawTexturePro(playbox.texture, 
-        (Rectangle){0, 0, playbox.texture.width, -playbox.texture.height}, 
+    DrawTexturePro(playbox.rendertex.texture, 
+        (Rectangle){0, 0, playbox.rendertex.texture.width, -playbox.rendertex.texture.height}, 
         (Rectangle){
-            playbox_offset_x * interface_ar_factor_w, 
-            playbox_offset_y * interface_ar_factor_h,
+            (panel_tex.width - RENDERBOXWIDTH - playbox_offset_x) * interface_ar_factor_w, 
+            (panel_tex.height - RENDERBOXHEIGHT - playbox_offset_y) * interface_ar_factor_h,
             RENDERBOXWIDTH * interface_ar_factor_w,
             RENDERBOXHEIGHT * interface_ar_factor_h
         }, 
@@ -51,28 +58,36 @@ void CreatePanel(void) {
     panels_arr[ASPECT_RATIO_WIDESCREEN_16x9] = LoadTexture("assets/textures/interface/game_WIDESCREEN_16x9.png");
     panels_arr[ASPECT_RATIO_WIDESCREEN_16x10] = LoadTexture("assets/textures/interface/game_WIDESCREEN_16x10.png");
 
-    switch (currentAspectRatio) {
-        case ASPECT_RATIO_STANDARD:
-            bars_height = 40;
-            break;
-        case ASPECT_RATIO_WIDESCREEN_16x9:
-            playbox_offset_x = 48;
-            bars_width = playbox_offset_x * 2;
-            break;
-        case ASPECT_RATIO_WIDESCREEN_16x10:
-            bars_width = 32;
-            break;
-    }
-
     panel_tex = panels_arr[currentAspectRatio];
-
     panel = LoadRenderTexture(panel_tex.width, panel_tex.height);
+
+    bars_width = panel_tex.width - RENDERBOXWIDTH;
+    bars_height = panel_tex.height - RENDERBOXHEIGHT;
+
+    playbox_offset_x = panel_tex.width/2 - RENDERBOXWIDTH/2;
+    playbox_offset_y = panel_tex.height/2 - RENDERBOXHEIGHT/2;
+
+    playbox.position.x = bars_width - playbox_offset_x;
+    playbox.position.y = -false * playbox_offset_y;
+
+    for (int p=0; p < ibutton_count; p++) {
+        ibuttons_arr[p].tex_arr[0] = LoadTexture(TextFormat("assets/textures/interface/%s.png", ibuttons_arr[p].name));
+        ibuttons_arr[p].tex_arr[1] = LoadTexture(TextFormat("assets/textures/interface/%s_clicked.png", ibuttons_arr[p].name));
+    }
 }
 
 void DrawPanel(void) {
     BeginTextureMode(panel);
         ClearBackground(BLANK);
         DrawTexture(panel_tex, 0, 0, WHITE);
+        for (int t=0; t < ibutton_count; t++)
+        {
+            IButton btn = ibuttons_arr[t];
+
+            DrawTextureEx(btn.tex_arr[btn.state], btn.vect, 0, 1.0f, WHITE);
+            btn.func();
+        }
+
     EndTextureMode();
 }
 
@@ -121,8 +136,8 @@ void DrawInventory(void) {
                 );
 
                 Rectangle item_rect = (Rectangle){
-                    playbox_offset_x + inventory_rect.x + slot_x, 
-                    playbox_offset_y + inventory_rect.y + slot_y, 
+                    playbox.position.x + inventory_rect.x + slot_x, 
+                    playbox.position.y + inventory_rect.y + slot_y, 
                     68, 68
                 };
                 
@@ -166,7 +181,7 @@ void CreateInterface(void) {
     interface_ar_factor_w = (float) GetScreenWidth() / interface.texture.width;
     interface_ar_factor_h = (float) GetScreenHeight() / interface.texture.height; // width factor is more accurate
 
-    playbox = LoadRenderTexture(RENDERBOXWIDTH, RENDERBOXHEIGHT);
+    playbox.rendertex = LoadRenderTexture(RENDERBOXWIDTH, RENDERBOXHEIGHT);
 }
 
 void DrawInterface(void) {
@@ -180,12 +195,14 @@ void DrawInterface(void) {
             0, WHITE
         );
         
+        // teoretycznie, jeśli interfejs można będzie dostosowywać,
+        // można użyć boolean jako mnożnika dla offsetów
         if (IsKeyDown(KEY_T)) {
             DrawTexturePro(inventory.texture,
                 (Rectangle){0, 0, inventory.texture.width, -inventory.texture.height}, 
                 (Rectangle){
-                    playbox_offset_x + RENDERBOXWIDTH/2 - inventory_tex.width/2,
-                    playbox_offset_y + RENDERBOXHEIGHT/12, 
+                    playbox.position.x + RENDERBOXWIDTH/2 - inventory_tex.width/2,
+                    playbox.position.y + RENDERBOXHEIGHT/12, 
                     inventory_tex.width, inventory_tex.height
                 },
                 (Vector2){0, 0},
@@ -197,7 +214,7 @@ void DrawInterface(void) {
 }
 
 void UnloadInterface(void) {
-    UnloadRenderTexture(playbox);
+    UnloadRenderTexture(playbox.rendertex);
 
     UnloadRenderTexture(interface);
     UnloadRenderTexture(inventory);

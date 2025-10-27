@@ -20,7 +20,7 @@ int main(void) {
     
     while (!WindowShouldClose()) {
         if (launched) {
-            BeginTextureMode(playbox);
+            BeginTextureMode(playbox.rendertex);
                 ClearBackground(default_fill_color);
                 RenderLevel(*current_tex_cont);
                 UpdatePlayer(&current_player);

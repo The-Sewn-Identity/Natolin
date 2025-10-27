@@ -5,7 +5,11 @@
 
 #define RENDERBOXWIDTH 480
 #define RENDERBOXHEIGHT 320
-extern RenderTexture2D playbox;
+typedef struct Playbox {
+    RenderTexture2D rendertex;
+    Vector2 position;
+} Playbox;
+extern Playbox playbox;
 
 extern RenderTexture2D panel;
 extern RenderTexture2D inventory;
@@ -15,10 +19,11 @@ extern Texture2D inventory_tex;
 
 typedef struct IButton {
     Texture2D tex_arr[2];
-    void (*func)();
+    Vector2 vect;
+    char * name;
+    bool state;
+    void (*func)(void);
 } IButton;
-
-extern IButton ibuttons_arr[];
 
 void CreateInterface(void);
 void DrawInterface(void);

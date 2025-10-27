@@ -16,11 +16,9 @@ const FontData font_list[] = {
     {&Zaklad, "Zaklad-Regular"},
     {&ModernDOS, "ModernDOS8x14"}
 };
-unsigned int font_list_len;
+const unsigned int font_list_len = ARRAYSIZE(font_list);
 
 void FontsLoad(void) {
-    font_list_len = ARRAYSIZE(font_list);
-
     for (int i=0; i < font_list_len; i++) {
         const char * path = TextFormat("%s%s%s", "assets/fonts/", font_list[i]._name, ".ttf");
 
