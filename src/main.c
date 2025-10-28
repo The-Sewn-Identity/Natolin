@@ -8,10 +8,13 @@
 #include "interface.h"
 #include <stdio.h>
 #include "util.h"
+#include "system_defs.h"
 
 int main(void) {    
     RaylibInitialize();
     MenuLoad();
+    
+    printf("%d:%d scale:%f\n", ratio[0], ratio[1], ratioScale);
 
     Color default_fill_color = PAXBEIGE;
     bool launched = true;

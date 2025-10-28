@@ -22,7 +22,7 @@ typedef struct IButton {
     Vector2 vect;
     char * name;
     bool state;
-    void (*func)(void);
+    void (*func)(void *);
 } IButton;
 
 void CreateInterface(void);

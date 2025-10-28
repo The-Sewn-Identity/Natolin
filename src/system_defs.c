@@ -1,15 +1,17 @@
 #include <raylib.h>
 #include <stdio.h>
+#include <math.h>
 #include "system_defs.h"
 #include "extutil.h"
 
 enum AspectRatios currentAspectRatio;
+int ratio[2];
+float ratioScale;
 
 void SetCurrentAspectRatio(void) {
-    int ratio[2] = { 
-        GetScreenWidth() / nwd(GetScreenWidth(), GetScreenHeight()),
-        GetScreenHeight() / nwd(GetScreenWidth(), GetScreenHeight())
-    };
+    ratio[0] = GetScreenWidth() / nwd(GetScreenWidth(), GetScreenHeight());
+    ratio[1] = GetScreenHeight() / nwd(GetScreenWidth(), GetScreenHeight());
+    ratioScale = floorf( ((float)ratio[0] / ratio[1]) * 100) / 100;
 
     if (ratio[0] == 4 && ratio[1] == 3) {
         currentAspectRatio = ASPECT_RATIO_STANDARD;
@@ -23,6 +25,7 @@ void SetCurrentAspectRatio(void) {
     else {
         currentAspectRatio = ASPECT_RATIO_STANDARD;
     }
+    // zmień to na skalowe i potem stosunkowe
 }
 
 void FollowMouse(void) {

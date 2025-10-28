@@ -8,6 +8,7 @@ enum AspectRatios {
     ASPECT_RATIO_COUNT
 };
 extern enum AspectRatios currentAspectRatio;
+extern int ratio[2]; extern float ratioScale;
 
 void SetCurrentAspectRatio(void);
 void FollowMouse(void);

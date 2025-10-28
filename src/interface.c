@@ -12,6 +12,7 @@
 
 #define res_of_inv_item 70
 
+bool isStandard = false;
 int bars_width = 0, bars_height = 0;
 int playbox_offset_x = 0, playbox_offset_y = 0;
 
@@ -19,6 +20,7 @@ float interface_ar_factor_w = 0;
 float interface_ar_factor_h = 0;
 
 Playbox playbox;
+Vector2 mousevect;
 
 RenderTexture2D panel;
 RenderTexture2D inventory;
@@ -26,8 +28,7 @@ RenderTexture2D interface;
 Texture2D panel_tex;
 Texture2D inventory_tex;
 
-void CheckEquipmentButton(void) {
-
+void CheckEquipmentButton(void * ibutton) {
 }
 
 IButton ibuttons_arr[] = {
@@ -64,8 +65,11 @@ void CreatePanel(void) {
     bars_width = panel_tex.width - RENDERBOXWIDTH;
     bars_height = panel_tex.height - RENDERBOXHEIGHT;
 
-    playbox_offset_x = panel_tex.width/2 - RENDERBOXWIDTH/2;
-    playbox_offset_y = panel_tex.height/2 - RENDERBOXHEIGHT/2;
+    playbox_offset_x = bars_width;
+    playbox_offset_y = bars_height;
+
+    if (ratioScale >= 1.77f) { playbox_offset_x /= 2; }
+    else if (ratioScale <= 1.33f) { isStandard = true; }
 
     playbox.position.x = bars_width - playbox_offset_x;
     playbox.position.y = -false * playbox_offset_y;
@@ -74,6 +78,9 @@ void CreatePanel(void) {
         ibuttons_arr[p].tex_arr[0] = LoadTexture(TextFormat("assets/textures/interface/%s.png", ibuttons_arr[p].name));
         ibuttons_arr[p].tex_arr[1] = LoadTexture(TextFormat("assets/textures/interface/%s_clicked.png", ibuttons_arr[p].name));
     }
+    
+    ibuttons_arr[0].vect.x = (panel_tex.width - playbox_offset_x) - (isStandard * ibuttons_arr[0].tex_arr[0].width) + floorf(sqrtf(playbox_offset_x + playbox_offset_y));
+    ibuttons_arr[0].vect.y = (panel_tex.height - playbox_offset_y) * isStandard + floorf(sqrtf(playbox_offset_x + playbox_offset_y));
 }
 
 void DrawPanel(void) {
@@ -82,10 +89,16 @@ void DrawPanel(void) {
         DrawTexture(panel_tex, 0, 0, WHITE);
         for (int t=0; t < ibutton_count; t++)
         {
-            IButton btn = ibuttons_arr[t];
+            IButton *btn = &ibuttons_arr[t];
+            Rectangle btnrect = {
+                btn->vect.x, btn->vect.y, btn->tex_arr[btn->state].width, btn->tex_arr[btn->state].height
+            };
 
-            DrawTextureEx(btn.tex_arr[btn.state], btn.vect, 0, 1.0f, WHITE);
-            btn.func();
+            if ((CheckCollisionPointRec(mousevect, btnrect) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) || IsKeyPressed(KEY_T)) {
+                btn->state = !btn->state;
+            }
+
+            DrawTextureEx(btn->tex_arr[btn->state], btn->vect, 0, 1.0f, WHITE);
         }
 
     EndTextureMode();
@@ -112,19 +125,12 @@ void DrawInventory(void) {
     bool display_text = false;
     Vector2 textlen;
     
-    Vector2 mousevect;
-    
     Item * items = ((Item*)current_player.items.array);
     int a = 0;
     
     BeginTextureMode(inventory);
         ClearBackground(BLANK);
         DrawTexture(inventory_tex, 0, 0, WHITE);
-
-        mousevect = (Vector2){
-            GetMousePosition().x / interface_ar_factor_w,
-            GetMousePosition().y / interface_ar_factor_h
-        };
         
         for (; slot_x <= 270; slot_x += ((slot_x == 103) ? 84 : 83)) {
             if (a < current_player.items.size / sizeof(Item))
@@ -155,8 +161,8 @@ void DrawInventory(void) {
         { 
             DrawTextbox(inv_text,
                 (Vector2){
-                    mousevect.x - (playbox_offset_x + inventory_rect.x),
-                    mousevect.y - (playbox_offset_y + inventory_rect.y)
+                    mousevect.x - (playbox.position.x + inventory_rect.x),
+                    mousevect.y - (playbox.position.y + inventory_rect.y)
                 },
                 INFO
             );
@@ -188,6 +194,11 @@ void DrawInterface(void) {
     BeginTextureMode(interface);
         ClearBackground(BLANK);
 
+        mousevect = (Vector2){
+            GetMousePosition().x / interface_ar_factor_w,
+            GetMousePosition().y / interface_ar_factor_h
+        };
+
         DrawTexturePro(panel.texture,
             (Rectangle){0, 0, panel.texture.width, -panel.texture.height},
             (Rectangle){0, 0, interface.texture.width, interface.texture.height},
@@ -197,7 +208,7 @@ void DrawInterface(void) {
         
         // teoretycznie, jeśli interfejs można będzie dostosowywać,
         // można użyć boolean jako mnożnika dla offsetów
-        if (IsKeyDown(KEY_T)) {
+        if (ibuttons_arr[0].state) {
             DrawTexturePro(inventory.texture,
                 (Rectangle){0, 0, inventory.texture.width, -inventory.texture.height}, 
                 (Rectangle){
