@@ -9,6 +9,7 @@
 #define PYTHAGORAS(s1, s2) ( sqrtf(powf(s1, 2) + powf(s2, 2)) )
 
 #define WITHIN(l1, l2, l3) ({ (l1 < l2) ? ((l3 > l1 && l3 <= l2) ? true : false) : ((l3 > l2 && l3 <= l1) ? true : false); })
+#define COUNTDIGITS(x) (int)((x == 0) ? 1 : log10f(abs(x)) + 1)
 int rhlval(int n1, int n2, char op);
 void *nalloc(void *__ptr, size_t __size);
 

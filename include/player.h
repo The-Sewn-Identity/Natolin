@@ -17,6 +17,11 @@ typedef struct Player {
     float offset_y;
     float offset_z;
     unsigned int layer;
+    struct {
+        bool block_xl; bool block_xr; 
+        bool block_yd; bool block_yu;
+        bool block_zi; bool block_zo;
+    };
     char * fname; char * lname;
     void * param;
     void (*ability)(struct Player *);

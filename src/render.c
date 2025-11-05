@@ -16,6 +16,8 @@ void Open(TextureDef * texdef, void * param) {
     }
 }
 
+void *Close = Open;
+
 void NextLevel(TextureDef * texdef, void * param) {
 }
 
@@ -80,10 +82,9 @@ void CreateLSLTexCont(LSL_Texture_Container tex_cont, LSL_Layout layout) {
 }
 
 void FreeLSLTextCont(LSL_Texture_Container tex_cont) {
-    Texture2D * tex_arr;
     for (int f=0; f < 16; f++) {
         for (int r=0; r < 64; r++) {
-            tex_arr = TexArrayVect(tex_cont[f][r].tex_arr);
+            Texture2D * tex_arr = TexArrayVect(tex_cont[f][r].tex_arr);
 
             for (int l=0; l < tex_cont[f][r].tex_arr.size / sizeof(Texture2D); l++) {
                 UnloadTexture(tex_arr[l]);
@@ -93,14 +94,12 @@ void FreeLSLTextCont(LSL_Texture_Container tex_cont) {
 }
 
 void RenderLevel(LSL_Texture_Container tex_cont) {
-    Texture2D * tex_arr;
-
     for (int r=0; r < 16; r++) {
         if (current_player.layer - 1 < r) {
             AnimatePlayer(&current_player);
         }
         for (int e=0; e < 64; e++) {
-            tex_arr = TexArrayVect(tex_cont[r][e].tex_arr);
+            Texture2D *tex_arr = TexArrayVect(tex_cont[r][e].tex_arr);
 
             if (IsTextureValid(tex_arr[tex_cont[r][e].tex_num]) ) {
                 DrawTexture(tex_arr[tex_cont[r][e].tex_num], 

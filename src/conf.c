@@ -8,7 +8,7 @@
 void RaylibInitialize(void) {
     LoadLevels();
 
-    SetConfigFlags(FLAG_FULLSCREEN_MODE | FLAG_VSYNC_HINT);
+    SetConfigFlags(FLAG_VSYNC_HINT);
     InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), TITLE);
     SetTargetFPS(DEFAULT_FPS);
 

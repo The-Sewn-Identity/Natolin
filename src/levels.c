@@ -5,10 +5,12 @@
 LSL_Layout PAX_Congress;
 LSL_Texture_Container PAX_Container_01;
 TrajLayout PAX_Trajectory_01;
+Fieldset PAX_Fieldset_01;
 
 LSL_Layout * current_level;
 LSL_Texture_Container * current_tex_cont;
 TrajLayout * current_traject;
+Fieldset * current_fieldset;
 
 
 void LoadLevels(void) {
@@ -34,4 +36,7 @@ void LoadTrajectories(void) {
     //         printf("Layer:[%hu] %f,%f \n", i, (*current_traject)[i].vect_arr[l].x, (*current_traject)[i].vect_arr[l].y);
     //     }
     // }
+
+    PAX_Fieldset_01 = LoadFieldset("assets/levels/PAX_Congress.fld");
+    current_fieldset = &PAX_Fieldset_01;
 }

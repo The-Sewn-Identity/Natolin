@@ -32,6 +32,7 @@ int main(void) {
                 DrawText(TextFormat("Vector factor YD, YU: %f, %f", current_player.vect_factor.y_down, current_player.vect_factor.y_up), 10, 30, 10, SLOBODA);
                 DrawText(TextFormat("Player CX, CY: %f,%f", 
                     current_player.rect.x + current_player.rect.width/2, current_player.rect.y + current_player.rect.height/2), 10, 40, 10, SLOBODA);
+                DrawText(TextFormat("Offset Z: %f", current_player.offset_z), 10, 50, 10, SLOBODA);
             EndTextureMode();
 
             DrawPanel();
