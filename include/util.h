@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <stddef.h>
+#include "fields.h"
 
 #define ARRAYSIZE(arr) sizeof(arr) / sizeof(arr[0])
 #define FREEPTR(ptr) (free(ptr), ptr = NULL)
@@ -11,13 +12,8 @@
 #define WITHIN(l1, l2, l3) ({ (l1 < l2) ? ((l3 > l1 && l3 <= l2) ? true : false) : ((l3 > l2 && l3 <= l1) ? true : false); })
 #define COUNTDIGITS(x) (int)((x == 0) ? 1 : log10f(abs(x)) + 1)
 int rhlval(int n1, int n2, char op);
-void *nalloc(void *__ptr, size_t __size);
 
-/* A pointer array with specified length */
-typedef struct r_array { void * array; size_t size; } r_array;
-
-/* Do an operation on a Vector2 */
-Vector2 VectOperation(Vector2 vect, float factor, char op);
+Vector2 AddCenterToField(Field *field);
 
 enum _basic_types {
     TYPE_DEFAULT = 0,

@@ -16,30 +16,34 @@ int rhlval(int n1, int n2, char op) {
     }
 }
 
-void *nalloc(void *__ptr, size_t __size) {
-    int *nptr; nptr = realloc(__ptr, __size);
-    if (nptr != NULL) { __ptr = nptr; }
-    return __ptr;
+// polygon qsort func
+int cmpx(const void *x1, const void *x2) {
+    return (*(float*)x1 - *(float*)x2);
 }
 
-Vector2 VectOperation(Vector2 vector, float factor, char op) {
-    Vector2 vect = vector;
-    if (factor == 0) { factor++; }
-    switch (op) {
-        case '+':
-            vect.x += factor; vect.y += factor;
-            break;
-        case '-':
-            vect.x -= factor; vect.y -= factor;
-            break;
-        case '*':
-            vect.x *= factor; vect.y *= factor;
-            break;
-        case '/':
-            vect.x /= factor; vect.y /= factor;
-            break;
-        default:
-            break;
+int cmpy(const void *y1, const void *y2) {
+    return (*(float*)y1 - *(float*)y2);
+}
+
+Vector2 AddCenterToField(Field *field) {
+    Vector2 vect = { 0, 0 };
+
+    if (field->point_arr.array != NULL) {
+        const size_t length = field->point_arr.size / sizeof(Vector2);
+        float x_arr[length]; float y_arr[length];
+
+        for (int f=0; f < length; f++) {
+            x_arr[f] = ((Vector2*)field->point_arr.array)[f].x;
+            y_arr[f] = ((Vector2*)field->point_arr.array)[f].y;
+        }
+
+        qsort(x_arr, length, sizeof(float), cmpx);
+        qsort(y_arr, length, sizeof(float), cmpy);
+
+        float cx = x_arr[length-1] - x_arr[0];
+        float cy = y_arr[length-1] - y_arr[0];
+
+        vect = (Vector2){ x_arr[0] + cx/2, y_arr[0] + cy/2 };
     }
     return vect;
 }

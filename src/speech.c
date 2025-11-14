@@ -9,7 +9,7 @@ void DrawTextbox(char *text, Vector2 position, unsigned int mode) {
     int locx = position.x; int locy = position.y;
     int border = 2;
 
-    unsigned int font_size;
+    unsigned int font_size = 20;
     
     switch (mode) {
         case NORMAL:

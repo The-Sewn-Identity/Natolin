@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "ltraj.h"
+#include "fields.h"
 #include "util.h"
 
-TrajLayout LoadTrajFile(char * filename) {
+/*TrajLayout LoadTrajFile(char * filename) {
     FILE * dottraj = fopen(filename, "rb");
     if (dottraj == NULL) { perror("FAILED TO OPEN FILE"); }
     if (strstr(filename, ".traj") == NULL) { printf("WRONG FILE EXTENSION"), dottraj = NULL; }
@@ -38,18 +38,19 @@ TrajLayout LoadTrajFile(char * filename) {
     FREEPTR(count);
     FREEPTR(venum);
     return trash;
-}
+}*/
 
 Fieldset LoadFieldset(char * filename) {
     FILE * dotfield = fopen(filename, "rb");
-    Fieldset fldset;
+    Fieldset fldset = { NULL, 0 };
 
     // https://sekrit.de/webdocs/c/beginners-guide-away-from-scanf.html
     if (dotfield != NULL) {
         const size_t linesize = 256 * sizeof(char);
-        char *line = (char*)malloc(linesize);
+        char *line = malloc(linesize);
 
         char *cut = NULL;
+
         while (fgets(line, linesize, dotfield) != NULL) {
             line[strcspn(line, "\r\n")] = '\0';
 
@@ -57,39 +58,55 @@ Fieldset LoadFieldset(char * filename) {
             cut = nalloc(cut, size);
             memmove(cut, line, size);
 
-            printf("line:\033[0;33m%s\033[0m%lld\n", cut, strlen(cut));
+            int8_t layer = -1;
+            
+            int result = sscanf(cut, "%*[L]%hhu [^|]", &layer);
+            bool laychecked = (result == 1 && WITHIN(-1, 15, layer));
 
-            uint8_t layer = 0;
-            sscanf(cut, "%*[L]%hhu [^|]", &layer);
-            printf("l%d\n", layer);
-
-            // dodaj kolejną przyciętą by się nie zerowało
         scan_line:
-            if ((cut = strpbrk(cut, "{")) != NULL) {
+            if ((cut = strpbrk(cut, "{")) != NULL && laychecked)
+            {
                 cut++;
-                printf("%s, len:%d\n", cut, strlen(cut));
+                fldset.fieldcount++;
+                
+                uint8_t ind = fldset.fieldcount - 1;
 
-                Vector2 vect;
+                fldset.field_arr = nalloc(fldset.field_arr, fldset.fieldcount * sizeof(Field));
+                fldset.field_arr[ind].point_arr.array = NULL;
+                
                 uint8_t vectcount = 0;
+                Vector2 vect = { 0 };
 
-                while ((vectcount += sscanf(cut, "%f%*[,]%f", &vect.x, &vect.y))) {
-                    printf("v:%f,%f\n", vect.x, vect.y);
-                    if (vectcount % 2 == 0) {
+                while ((vectcount += sscanf(cut, "%f%*[,]%f", &vect.x, &vect.y)))
+                {
+                    if (vectcount % 2 == 0 && vectcount > 0)
+                    {
                         cut += COUNTDIGITS(vect.x) + 1 + COUNTDIGITS(vect.y);
                         
-                        if (cut[0] == ' ') {
+                        fldset.field_arr[ind].layer = layer;
+                        fldset.field_arr[ind].point_arr.size = vectcount/2 * sizeof(Vector2);
+                        fldset.field_arr[ind].point_arr.array = nalloc(fldset.field_arr[ind].point_arr.array, fldset.field_arr[ind].point_arr.size);
+
+                        uint8_t vin = vectcount/2 - 1;
+                        ((Vector2*)fldset.field_arr[ind].point_arr.array)[vin] = (Vector2){ vect.x, vect.y };
+
+                        if (cut[0] == ' '){
                             cut++;
                         }
                         else {
+                            fldset.field_arr[ind].center = AddCenterToField(&fldset.field_arr[ind]);
+                            printf("CENTER:%f, %f\n", fldset.field_arr[ind].center.x, fldset.field_arr[ind].center.y);
                             goto scan_line;
                         }
                     }
+                    else { goto scan_line; }
                 }
             }
         }
         if (feof(dotfield)) {
-            printf("\nReached EOF.\n");
+            printf("Reached EOF. Fields read: %hhu\n", fldset.fieldcount);
             FREEPTR(line);
+            FREEPTR(cut);
         }
     }
     else {

@@ -28,8 +28,8 @@ int main(void) {
                 RenderLevel(*current_tex_cont);
                 UpdatePlayer(&current_player);
                 DrawText(TextFormat("Layer %d", current_player.layer), 10, 0, 10, SLOBODA);
-                DrawText(TextFormat("Vector factor XL, XR: %f, %f", current_player.vect_factor.x_left, current_player.vect_factor.x_right), 10, 20, 10, SLOBODA);
-                DrawText(TextFormat("Vector factor YD, YU: %f, %f", current_player.vect_factor.y_down, current_player.vect_factor.y_up), 10, 30, 10, SLOBODA);
+                DrawText(TextFormat("Vector factor XL, XR: %f, %f", current_player.vect_factor.left, current_player.vect_factor.right), 10, 20, 10, SLOBODA);
+                DrawText(TextFormat("Vector factor YD, YU: %f, %f", current_player.vect_factor.down, current_player.vect_factor.up), 10, 30, 10, SLOBODA);
                 DrawText(TextFormat("Player CX, CY: %f,%f", 
                     current_player.rect.x + current_player.rect.width/2, current_player.rect.y + current_player.rect.height/2), 10, 40, 10, SLOBODA);
                 DrawText(TextFormat("Offset Z: %f", current_player.offset_z), 10, 50, 10, SLOBODA);

@@ -1,1 +1,1 @@
-gcc -Wall -o Natolin ./src/*.c -I./include/ -L/usr/include/ -I/home/$USER/Libraries/LSLReader/ -L/home/$USER/Libraries/LSLReader/ -I/home/$USER/Libraries/extutil/ -L/home/$USER/Libraries/extutil/ -lraylib -llslread -lextutil -lm -utf-8
+gcc -Wall -o Natolin ./src/*.c -I./include/ -L/usr/include/ -I/home/$USER/Libraries/LSLReader/ -L/home/$USER/Libraries/LSLReader/ -I/home/$USER/Libraries/extutil/ -L/home/$USER/Libraries/extutil/ -lraylib -llslread -lextutil -lm -utf-8 -O3

@@ -1,15 +1,14 @@
 #include <stdio.h>
 #include <lslread.h>
 #include "levels.h"
+#include "util.h"
 
 LSL_Layout PAX_Congress;
 LSL_Texture_Container PAX_Container_01;
-TrajLayout PAX_Trajectory_01;
 Fieldset PAX_Fieldset_01;
 
 LSL_Layout * current_level;
 LSL_Texture_Container * current_tex_cont;
-TrajLayout * current_traject;
 Fieldset * current_fieldset;
 
 
@@ -25,18 +24,7 @@ void LoadTextureContainers(void) {
     current_tex_cont = &PAX_Container_01;
 }
 
-void LoadTrajectories(void) {
-    PAX_Trajectory_01 = LoadTrajFile("assets/levels/PAX_Congress.traj");
-
-    current_traject = &PAX_Trajectory_01;
-
-    // for (int i=0; i < 16; i++) {
-    //     printf("Count: %hu \n", (*current_traject)[i].count);
-    //     for (int l=0; l < (*current_traject)[i].count; l++) {
-    //         printf("Layer:[%hu] %f,%f \n", i, (*current_traject)[i].vect_arr[l].x, (*current_traject)[i].vect_arr[l].y);
-    //     }
-    // }
-
+void LoadFieldsets(void) {
     PAX_Fieldset_01 = LoadFieldset("assets/levels/PAX_Congress.fld");
     current_fieldset = &PAX_Fieldset_01;
 }

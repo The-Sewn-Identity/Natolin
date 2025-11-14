@@ -3,10 +3,11 @@
 #include <string.h>
 #include <raylib.h>
 #include <lslread.h>
-#include "util.h"
+#include <extutil.h>
 #include "levels.h"
 #include "player.h"
 #include "render.h"
+#include "util.h"
 
 void Open(TextureDef * texdef, void * param) {
     if (param) {
@@ -34,7 +35,7 @@ Texture2D PassValidTexture(const char *filename) {
     }
     else {
         // TraceLog(LOG_WARNING, TextFormat("FAILED TO LOAD TEXTURE: %s", filename));
-        return (Texture2D){};
+        return (Texture2D){0};
     }
 }
 

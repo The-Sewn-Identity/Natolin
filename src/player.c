@@ -28,8 +28,8 @@ Player CreatePlayer(void) {
     Player pl = {
         .fname = "Stanisław",
         .lname = "Konieczny",
-        .x_pos = 240 + 100,
-        .y_pos = 160 + 50,
+        .center_x = 158,
+        .center_y = 245,
         .speed = 20.0f,
         .offset_x = 0,
         .offset_y = 0,
@@ -39,6 +39,12 @@ Player CreatePlayer(void) {
     };
     LoadPlayerAnimations(&pl.animations);
     pl.current_tex = pl.animations[0][0];
+
+    pl.x_pos = pl.center_x - pl.current_tex.width/2;
+    pl.y_pos = pl.center_y - pl.current_tex.height/2;
+
+    const float VF = cbrtf(pl.speed);
+    pl.vect_factor = (struct vect_factor){ -VF, VF, VF, -VF };
     
     pl.items.size = 2 * sizeof(Item); pl.items.array = (Item*)malloc(pl.items.size);
     ((Item*)pl.items.array)[0] = CreateItem(STANDARD, "the egel", "zbowideagle");
@@ -52,13 +58,13 @@ void UnloadPlayer(Player *_player) {
 }
 
 void UpdatePlayer(Player *_player) {
-    PlayerCollision(_player);
     MovePlayer(_player);
+    CheckIfPlayerInField(_player);
     _player->ability(_player);
 }
 
 void AnimatePlayer(Player *_player) {
-    _player->vect = (Vector2){
+    _player->scale_vect = (Vector2){
             _player->x_pos + (_player->current_tex.width 
             - PlayerScale(_player) * _player->current_tex.width)/2,
             _player->y_pos + (_player->current_tex.height
@@ -66,88 +72,44 @@ void AnimatePlayer(Player *_player) {
         },
     DrawTextureEx(
         _player->current_tex,
-        _player->vect,
+        _player->scale_vect,
         0, PlayerScale(_player), WHITE
     );
 }
 
-void PlayerCollision(Player * _player) {
-    _player->rect = (Rectangle){
-        _player->vect.x,
-        _player->vect.y,
-        _player->current_tex.width * PlayerScale(_player),
-        _player->current_tex.height * PlayerScale(_player),
-    };
-    for (int r=0; r < 16; r++) {
-        for (int e=0; e < 64; e++) {
-            if (r == _player->layer - 1) {
-                //printf("%d \x", CheckCollisionRecs((*current_tex_cont)[r][e].rect, _player->rect));
-            }
-        }
-    }
-}
-
-void GetVectFactor(Player *_player) {
-    unsigned int layer = _player->layer - 1;
-    float x = 0; float y = 0; float pzpr = 0;
-
-    Trajectory *trajLayer = &(*current_traject)[layer];
-    float fpx; float npx;
-    float fpy; float npy;
-
-    for (int l=0; l < trajLayer->count - 1; l++) {
-        fpx = trajLayer->vect_arr[l].x; npx = trajLayer->vect_arr[l + 1].x;
-        fpy = trajLayer->vect_arr[l].y; npy = trajLayer->vect_arr[l + 1].y;
-
-        x = fabsf(fpx - npx); y = fabsf(fpy - npy);
-        pzpr = PYTHAGORAS(x, y);
+void CheckIfPlayerInField(Player *_player) {
+    for (int f=0; f < current_fieldset->fieldcount; f++)
+    {
+        r_array *point_arr = &(current_fieldset->field_arr[f].point_arr);
+        int len = point_arr->size / sizeof(Vector2);
         
-        if (WITHIN(fpx, npx, _player->rect.x + _player->rect.width/2) 
-            && WITHIN(fpy, npy, _player->rect.y + _player->rect.height/2))
+        Vector2 betleg = (Vector2){ _player->center_x, _player->center_y + _player->rect.height / 2.25f };
+
+        if (_player->layer - 1 == current_fieldset->field_arr[f].layer)
         {
-            _player->vect_factor.x_right = (x/pzpr); _player->vect_factor.x_left = -(x/pzpr);
-            _player->vect_factor.y_down = sqrt((pzpr/y)); _player->vect_factor.y_up = -sqrt((pzpr/y));
+            Vector2 x_axis = (Vector2){ _player->rect.x, _player->rect.x + _player->rect.width };
+            Vector2 y_axis = (Vector2){ _player->rect.y, _player->rect.y + _player->rect.height };
 
-            if (trajLayer->layer >= 1 && trajLayer->layer < 15) {
-                for (int a=0; a < (*current_traject)[layer - 1].count - 1; a++) {
-                    float pfpx = (*current_traject)[layer - 1].vect_arr[a].x;
-                    float pfpy = (*current_traject)[layer - 1].vect_arr[a].y;
-                    float pnpx = (*current_traject)[layer - 1].vect_arr[a+1].x;
-                    float pnpy = (*current_traject)[layer - 1].vect_arr[a+1].x;
+            Vector2 *fcenter = &current_fieldset->field_arr[f].center;
+            float x_axis_diff = betleg.x - fcenter->x;
+            float y_axis_diff = betleg.y - fcenter->y;
 
-                    if (WITHIN(pfpx, pnpx, _player->rect.x + _player->rect.width/2)
-                        && WITHIN(pfpy, pnpy, _player->rect.y + _player->rect.height/2)){
-                            _player->block_zi = false;
-                    }
-                    else { _player->block_zi = true; }
-                }
-                // for (int b=0; b < (*current_traject)[layer + 1].count - 1; b++) {
-                //     float nfpx = (*current_traject)[layer + 1].vect_arr[b].x;
-                //     float nfpy = (*current_traject)[layer + 1].vect_arr[b].y;
-                //     float nnpx = (*current_traject)[layer + 1].vect_arr[b+1].x;
-                //     float nnpy = (*current_traject)[layer + 1].vect_arr[b+1].x;
+            if (CheckCollisionPointPoly(betleg, point_arr->array, len)) {
+                const float VF = cbrtf(_player->speed);
 
-                //     if (WITHIN(nfpx, nnpx, _player->rect.x + _player->rect.width/2)
-                //         && WITHIN(nfpy, nnpy, _player->rect.y + _player->rect.height/2)){
-                //             _player->block_zo = false;
-                //     }
-                //     else { _player->block_zo = true; }
-                // }
-            }   
-        }
-        else
-        {
-            if (rhlval(fpx, npx, '>') < _player->rect.x + _player->rect.width/2) {
-                _player->x_pos -= 0.5f;
+                _player->vect_factor.left = -VF;
+                _player->vect_factor.right = VF;
+                _player->vect_factor.down = VF;
+                _player->vect_factor.up = -VF;
             }
-            if (_player->rect.x + _player->rect.width/2 < rhlval(fpx, npx, '<')) {
-                _player->x_pos += 0.5f;
-            }
-            if (rhlval(fpy, npy, '<') > _player->rect.y + _player->rect.height/2) {
-                _player->y_pos += 0.5f;
-            }
-            if (_player->rect.y + _player->rect.height/2 > rhlval(fpy, npy, '>')) {
-                _player->y_pos -= 0.5f;
+            else {
+                if (x_axis_diff <= 0) _player->vect_factor.left = 0;
+
+                if (x_axis_diff > 0) _player->vect_factor.right = 0;
+
+                if (y_axis_diff > 0) _player->vect_factor.down = 0;
+
+                if (y_axis_diff <= 0) _player->vect_factor.up = 0;
             }
         }
     }
@@ -156,33 +118,37 @@ void GetVectFactor(Player *_player) {
 void MovePlayer(Player *_player) {
     _player->layer = 16 - roundf(_player->offset_z) + 1;
     _player->z_speed = _player->current_tex.height/_player->layer;
-    GetVectFactor(_player);
+
+    _player->rect = (Rectangle){
+        _player->scale_vect.x,
+        _player->scale_vect.y,
+        _player->current_tex.width * PlayerScale(_player),
+        _player->current_tex.height * PlayerScale(_player),
+    };
+    
+    _player->center_x = _player->rect.x + _player->rect.width/2;
+    _player->center_y = _player->rect.y + _player->rect.height/2;
 
     if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) {
-        if (_player->layer > 1 && !_player->block_zi) { 
-            _player->offset_z += _player->z_speed
-            * GetFrameTime();
-        }
-        _player->y_pos += _player->speed * _player->vect_factor.y_up * GetFrameTime();
+        // if (_player->layer > 1) { 
+        //     _player->offset_z += _player->z_speed
+        //     * GetFrameTime();
+        // }
+        _player->y_pos += _player->speed * _player->vect_factor.up * GetFrameTime();
     }
     if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) {
-        if (_player->layer < 16) {
-            _player->offset_z -= _player->z_speed
-            * GetFrameTime();
-        }
-        _player->y_pos += _player->speed * _player->vect_factor.y_down * GetFrameTime();
+        // if (_player->layer < 16) {
+        //     _player->offset_z -= _player->z_speed
+        //     * GetFrameTime();
+        // }
+        _player->y_pos += _player->speed * _player->vect_factor.down * GetFrameTime();
     }
     if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) {
-        //if (_player->layer > 1) { _player->offset_z -= 5 * GetFrameTime(); }
-        _player->x_pos += _player->speed * _player->vect_factor.x_left * GetFrameTime();
+        _player->x_pos += _player->speed * _player->vect_factor.left * GetFrameTime();
     }
     if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) {
-        //if (_player->layer > 1) { _player->offset_z -= 5 * GetFrameTime(); }
-        _player->x_pos += _player->speed * _player->vect_factor.x_right * GetFrameTime();
+        _player->x_pos += _player->speed * _player->vect_factor.right * GetFrameTime();
     }
-
-    //_player->x_pos = GetMouseX();
-    //_player->y_pos = GetMouseY();
 }
 
 void Inspect(Player *_player) {

@@ -16,7 +16,7 @@ void RaylibInitialize(void) {
     CreateInterface();
 
     LoadTextureContainers();
-    LoadTrajectories();
+    LoadFieldsets();
     FontsLoad();
 }
 

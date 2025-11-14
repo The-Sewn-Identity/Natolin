@@ -3,7 +3,7 @@
 
 #include <raylib.h>
 #include <lslread.h>
-#include "util.h"
+#include <extutil.h>
 
 enum TextureIndexes {
     DEFAULT = 0,
