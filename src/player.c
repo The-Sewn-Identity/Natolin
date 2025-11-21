@@ -82,20 +82,34 @@ void CheckIfPlayerInField(Player *_player) {
     {
         r_array *point_arr = &(current_fieldset->field_arr[f].point_arr);
         int len = point_arr->size / sizeof(Vector2);
+
+        int player_layer = _player->layer - 1;
+        int layer_diff = player_layer - current_fieldset->field_arr[f].layer;
         
+        Vector2 torso = (Vector2){ _player->center_x + _player->rect.width * 0.75f, _player->center_y + _player->rect.height/3 };
         Vector2 betleg = (Vector2){ _player->center_x, _player->center_y + _player->rect.height / 2.25f };
-
-        if (_player->layer - 1 == current_fieldset->field_arr[f].layer)
+    
+        if (layer_diff == 1)
         {
-            Vector2 x_axis = (Vector2){ _player->rect.x, _player->rect.x + _player->rect.width };
-            Vector2 y_axis = (Vector2){ _player->rect.y, _player->rect.y + _player->rect.height };
-
+            if (CheckCollisionPointPoly(torso, point_arr->array, len)) {
+                _player->offset_z += layer_diff;
+                printf("INSIDE\n");
+            }
+        }
+        else if (layer_diff == -1) {
+            if (CheckCollisionPointPoly(betleg, point_arr->array, len)) {
+                _player->offset_z += layer_diff;
+                printf("INSIDE\n");
+            }
+        }
+        else if (layer_diff == 0)
+        {
             Vector2 *fcenter = &current_fieldset->field_arr[f].center;
             float x_axis_diff = betleg.x - fcenter->x;
             float y_axis_diff = betleg.y - fcenter->y;
 
             if (CheckCollisionPointPoly(betleg, point_arr->array, len)) {
-                const float VF = cbrtf(_player->speed);
+                float VF = cbrtf(_player->speed);
 
                 _player->vect_factor.left = -VF;
                 _player->vect_factor.right = VF;

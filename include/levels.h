@@ -5,7 +5,13 @@
 #include "render.h"
 #include "fields.h"
 
-extern LSL_Layout PAX_Congress;
+typedef struct Level {
+    LSL_Layout lsl;
+    LSL_Texture_Container lsl_tex;
+    Fieldset fld;
+} Level;
+
+extern LSL_Layout PAX_Layout_01;
 extern LSL_Texture_Container PAX_Container_01;
 extern Fieldset PAX_Fieldset_01;
 
