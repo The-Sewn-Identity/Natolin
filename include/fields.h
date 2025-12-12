@@ -13,9 +13,11 @@ typedef struct Field {
 
 typedef struct Fieldset {
     Field *field_arr;
+    float x_len; float y_len;
     uint8_t fieldcount;
 } Fieldset;
 
 Fieldset LoadFieldset(char * filename);
+Vector2 AddCenterToField(Field *fld);
 
 #endif

@@ -30,7 +30,7 @@ Player CreatePlayer(void) {
         .lname = "Konieczny",
         .center_x = 158,
         .center_y = 245,
-        .speed = 20.0f,
+        .speed = 8.0f,
         .offset_x = 0,
         .offset_y = 0,
         .offset_z = 1,
@@ -45,6 +45,7 @@ Player CreatePlayer(void) {
 
     const float VF = cbrtf(pl.speed);
     pl.vect_factor = (struct vect_factor){ -VF, VF, VF, -VF };
+    pl.angle = 1.0f;
     
     pl.items.size = 2 * sizeof(Item); pl.items.array = (Item*)malloc(pl.items.size);
     ((Item*)pl.items.array)[0] = CreateItem(STANDARD, "the egel", "zbowideagle");
@@ -59,7 +60,7 @@ void UnloadPlayer(Player *_player) {
 
 void UpdatePlayer(Player *_player) {
     MovePlayer(_player);
-    CheckIfPlayerInField(_player);
+    LayerMovement(_player);
     _player->ability(_player);
 }
 
@@ -77,7 +78,7 @@ void AnimatePlayer(Player *_player) {
     );
 }
 
-void CheckIfPlayerInField(Player *_player) {
+void LayerMovement(Player *_player) {
     for (int f=0; f < current_fieldset->fieldcount; f++)
     {
         r_array *point_arr = &(current_fieldset->field_arr[f].point_arr);
@@ -86,46 +87,68 @@ void CheckIfPlayerInField(Player *_player) {
         int player_layer = _player->layer - 1;
         int layer_diff = player_layer - current_fieldset->field_arr[f].layer;
         
-        Vector2 torso = (Vector2){ _player->center_x + _player->rect.width * 0.75f, _player->center_y + _player->rect.height/3 };
-        Vector2 betleg = (Vector2){ _player->center_x, _player->center_y + _player->rect.height / 2.25f };
-    
+        // promień naprzeciw gracza
+        float ray = _player->angle;
+
+        float midtan = tanf(ray * DEG2RAD);
+        float midsin = sinf(ray * DEG2RAD);
+        float midcos = cosf(ray * DEG2RAD);
+        float midctg = 1 / midtan;
+        // to mnożenie tangensów jest debilne
+
+        float width = _player->rect.width;
+        float height = _player->rect.height;
+
+        Vector2 east_leg = (Vector2){
+            (_player->center_x + width / 2) - (width * midsin * midcos),
+            (_player->center_y + height / 2) + (height * midtan)
+        };
+
+        Vector2 west_leg = (Vector2){
+            (_player->center_x - width / 2) - (width * midsin * midcos),
+            (_player->center_y + height / 2) - (height * midtan)
+        };
+
+        DrawLineEx((Vector2){_player->center_x, _player->center_y}, west_leg, 2, BLACK);
+        DrawLineEx((Vector2){_player->center_x, _player->center_y}, east_leg, 2, BLACK);
+
         if (layer_diff == 1)
         {
-            if (CheckCollisionPointPoly(torso, point_arr->array, len)) {
+            if (CheckCollisionPointPoly(east_leg, point_arr->array, point_arr->size / sizeof(Vector2))) {
                 _player->offset_z += layer_diff;
-                printf("INSIDE\n");
             }
         }
         else if (layer_diff == -1) {
-            if (CheckCollisionPointPoly(betleg, point_arr->array, len)) {
+            if (CheckCollisionPointPoly(west_leg, point_arr->array, point_arr->size / sizeof(Vector2))) {
                 _player->offset_z += layer_diff;
-                printf("INSIDE\n");
             }
         }
-        else if (layer_diff == 0)
-        {
-            Vector2 *fcenter = &current_fieldset->field_arr[f].center;
-            float x_axis_diff = betleg.x - fcenter->x;
-            float y_axis_diff = betleg.y - fcenter->y;
 
-            if (CheckCollisionPointPoly(betleg, point_arr->array, len)) {
-                float VF = cbrtf(_player->speed);
+        // if (layer_diff == 0)
+        // {
+        //     Vector2 *fcenter = &current_fieldset->field_arr[f].center;
+        //     float x_axis_diff = middle_leg.x - fcenter->x;
+        //     float y_axis_diff = middle_leg.y - fcenter->y;
 
-                _player->vect_factor.left = -VF;
-                _player->vect_factor.right = VF;
-                _player->vect_factor.down = VF;
-                _player->vect_factor.up = -VF;
-            }
-            else {
-                if (x_axis_diff <= 0) _player->vect_factor.left = 0;
+        //     if (CheckCollisionPointPoly(middle_leg, point_arr->array, len)) {
+        //         float VF = cbrtf(_player->speed);
 
-                if (x_axis_diff > 0) _player->vect_factor.right = 0;
+        //         _player->vect_factor.left = -VF;
+        //         _player->vect_factor.right = VF;
+        //         _player->vect_factor.down = VF;
+        //         _player->vect_factor.up = -VF;
+        //     }
+        //     else {
+        //         if (x_axis_diff <= 0) _player->vect_factor.left = 0;
 
-                if (y_axis_diff > 0) _player->vect_factor.down = 0;
+        //         if (x_axis_diff > 0) _player->vect_factor.right = 0;
 
-                if (y_axis_diff <= 0) _player->vect_factor.up = 0;
-            }
-        }
+        //         if (y_axis_diff > 0) _player->vect_factor.down = 0;
+
+        //         if (y_axis_diff <= 0) _player->vect_factor.up = 0;
+        //     }
+        // }
+
     }
 }
 
@@ -144,23 +167,21 @@ void MovePlayer(Player *_player) {
     _player->center_y = _player->rect.y + _player->rect.height/2;
 
     if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) {
-        // if (_player->layer > 1) { 
-        //     _player->offset_z += _player->z_speed
-        //     * GetFrameTime();
-        // }
         _player->y_pos += _player->speed * _player->vect_factor.up * GetFrameTime();
     }
     if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) {
-        // if (_player->layer < 16) {
-        //     _player->offset_z -= _player->z_speed
-        //     * GetFrameTime();
-        // }
         _player->y_pos += _player->speed * _player->vect_factor.down * GetFrameTime();
     }
     if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) {
+        if (_player->angle < 4.0f) {
+            _player->angle += 3 * GetFrameTime();
+        }
         _player->x_pos += _player->speed * _player->vect_factor.left * GetFrameTime();
     }
     if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) {
+        if (_player->angle > -4.0f) {
+            _player->angle += -3 * GetFrameTime();
+        }
         _player->x_pos += _player->speed * _player->vect_factor.right * GetFrameTime();
     }
 }

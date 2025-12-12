@@ -15,6 +15,7 @@ typedef struct Player {
     struct             { float x_pos; float y_pos; float center_x; float center_y; };
     Vector2 scale_vect;
     float speed; float z_speed;
+    float angle;
     //  ------
     float offset_x;
     float offset_y;
@@ -34,7 +35,7 @@ void UpdatePlayer(Player *_player);
 
 void AnimatePlayer(Player *__player);
 void MovePlayer(Player *__player);
-void CheckIfPlayerInField(Player *_player);
+void LayerMovement(Player *_player);
 void Inspect(Player *__player);
 void Interact(Player *__player);
 

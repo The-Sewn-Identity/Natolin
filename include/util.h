@@ -12,8 +12,10 @@
 #define WITHIN(l1, l2, l3) ({ (l1 < l2) ? ((l3 > l1 && l3 <= l2) ? true : false) : ((l3 > l2 && l3 <= l1) ? true : false); })
 #define COUNTDIGITS(x) (int)((x == 0) ? 1 : log10f(abs(x)) + 1)
 int rhlval(int n1, int n2, char op);
+int cmpx(const void *x1, const void *x2);
+int cmpy(const void *y1, const void *y2);
 
-Vector2 AddCenterToField(Field *field);
+void DrawField(Field *fld);
 
 enum _basic_types {
     TYPE_DEFAULT = 0,

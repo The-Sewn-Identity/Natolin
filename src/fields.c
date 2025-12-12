@@ -42,7 +42,7 @@
 
 Fieldset LoadFieldset(char * filename) {
     FILE * dotfield = fopen(filename, "rb");
-    Fieldset fldset = { NULL, 0 };
+    Fieldset fldset = { NULL, 0, 0, 0 };
 
     // https://sekrit.de/webdocs/c/beginners-guide-away-from-scanf.html
     if (dotfield != NULL) {
@@ -108,10 +108,58 @@ Fieldset LoadFieldset(char * filename) {
             FREEPTR(line);
             FREEPTR(cut);
         }
+        for (int f=0; f < fldset.fieldcount; f++) {
+            Field *fld = &fldset.field_arr[f];
+
+            if (fld->point_arr.array != NULL) {
+                const size_t length = fld->point_arr.size / sizeof(Vector2);
+                float x_arr[length]; float y_arr[length];
+
+                for (int f=0; f < length; f++) {
+                    x_arr[f] = ((Vector2*)fld->point_arr.array)[f].x;
+                    y_arr[f] = ((Vector2*)fld->point_arr.array)[f].y;
+                }
+
+                qsort(x_arr, length, sizeof(float), cmpx);
+                qsort(y_arr, length, sizeof(float), cmpy);
+
+                for (int p=0; p < length - 1; p++) {
+                    float x_diff = x_arr[p + 1] - x_arr[p];
+                    float y_diff = y_arr[p + 1] - y_arr[p];
+
+                    fldset.x_len += x_diff;
+                    fldset.y_len += y_diff;
+                }
+            }
+        }
+        printf("Lengths: %f %f\n", fldset.x_len, fldset.y_len);
     }
     else {
         perror("FAILED TO OPEN FILE");      
     }
     fclose(dotfield);
     return fldset;
+}
+
+Vector2 AddCenterToField(Field *fld) {
+    Vector2 vect = { 0, 0 };
+
+    if (fld->point_arr.array != NULL) {
+        const size_t length = fld->point_arr.size / sizeof(Vector2);
+        float x_arr[length]; float y_arr[length];
+
+        for (int f=0; f < length; f++) {
+            x_arr[f] = ((Vector2*)fld->point_arr.array)[f].x;
+            y_arr[f] = ((Vector2*)fld->point_arr.array)[f].y;
+        }
+
+        qsort(x_arr, length, sizeof(float), cmpx);
+        qsort(y_arr, length, sizeof(float), cmpy);
+
+        float cx = x_arr[length-1] - x_arr[0];
+        float cy = y_arr[length-1] - y_arr[0];
+
+        vect = (Vector2){ x_arr[0] + cx/2, y_arr[0] + cy/2 };
+    }
+    return vect;
 }
