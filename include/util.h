@@ -15,7 +15,7 @@ int rhlval(int n1, int n2, char op);
 int cmpx(const void *x1, const void *x2);
 int cmpy(const void *y1, const void *y2);
 
-void DrawField(Field *fld);
+void DrawField(Field *fld, Color col);
 
 enum _basic_types {
     TYPE_DEFAULT = 0,

@@ -5,9 +5,29 @@
 #include "player.h"
 #include "levels.h"
 #include "interface.h"
+#include "colors.h"
 #include "util.h"
 
 #define SHORTDIR "assets/textures/player/%s/%s"
+
+const Color color_arr[] = {
+    BLACK,
+    WHITE,
+    MAROON,
+    MAGENTA,
+    VERMILION,
+    WALDROT ,
+    PAXVIRID,
+    PAXBEIGE,
+    CIVICYAN,
+    ZSL,
+    VISTA,
+    SLOBODA,
+    SED,
+    EINHEIT,
+    DEMOBLUE,
+    DEMORED
+};
 
 Player current_player;
 
@@ -43,9 +63,9 @@ Player CreatePlayer(void) {
     pl.x_pos = pl.center_x - pl.current_tex.width/2;
     pl.y_pos = pl.center_y - pl.current_tex.height/2;
 
-    const float VF = cbrtf(pl.speed);
-    pl.vect_factor = (struct vect_factor){ -VF, VF, VF, -VF };
-    pl.angle = 1.0f;
+    const float vect_fl = cbrtf(pl.speed);
+    pl.vect_factor = (struct vect_factor){ -vect_fl, vect_fl, vect_fl, -vect_fl };
+    pl.angle = 0.0f;
     
     pl.items.size = 2 * sizeof(Item); pl.items.array = (Item*)malloc(pl.items.size);
     ((Item*)pl.items.array)[0] = CreateItem(STANDARD, "the egel", "zbowideagle");
@@ -96,59 +116,70 @@ void LayerMovement(Player *_player) {
         float midctg = 1 / midtan;
         // to mnożenie tangensów jest debilne
 
-        float width = _player->rect.width;
+        float width = _player->rect.width / 2;
         float height = _player->rect.height;
 
         Vector2 east_leg = (Vector2){
-            (_player->center_x + width / 2) - (width * midsin * midcos),
-            (_player->center_y + height / 2) + (height * midtan)
+            (_player->center_x + width / 1.5f) - (width * midsin * midcos),
+            (_player->center_y + height / 2.25f) + (height * midtan)
+        };
+
+        Vector2 middle_leg = {
+            (_player->center_x) - (width * midsin * midcos),
+            (_player->center_y + height / 2.25f) - (height * fabsf(midtan)/2)
         };
 
         Vector2 west_leg = (Vector2){
-            (_player->center_x - width / 2) - (width * midsin * midcos),
-            (_player->center_y + height / 2) - (height * midtan)
+            (_player->center_x - width / 1.5f) - (width * midsin * midcos),
+            (_player->center_y + height / 2.25f) - (height * midtan)
         };
 
-        DrawLineEx((Vector2){_player->center_x, _player->center_y}, west_leg, 2, BLACK);
-        DrawLineEx((Vector2){_player->center_x, _player->center_y}, east_leg, 2, BLACK);
+        DrawLineEx((Vector2){_player->center_x, _player->center_y}, west_leg, 1, BLACK);
+        DrawLineEx((Vector2){_player->center_x, _player->center_y}, middle_leg, 1, BLACK);
+        DrawLineEx((Vector2){_player->center_x, _player->center_y}, east_leg, 1, BLACK);
 
-        if (layer_diff == 1)
+        DrawField(&current_fieldset->field_arr[f], color_arr[15 - f]);
+
+        if (layer_diff == 0)
         {
-            if (CheckCollisionPointPoly(east_leg, point_arr->array, point_arr->size / sizeof(Vector2))) {
+            float x_axis_diff = middle_leg.x - current_fieldset->field_arr[f].center.x;
+            float y_axis_diff = middle_leg.y - current_fieldset->field_arr[f].center.y;
+
+            const float vect_fl = cbrtf(_player->speed);
+            if (CheckCollisionPointPoly(middle_leg, point_arr->array, point_arr->size / sizeof(Vector2))) {
+
+                printf("INSIDE\n");
+
+                DrawLineEx((Vector2){middle_leg.x, middle_leg.y - 3}, middle_leg, 3, SLOBODA);
+
+                _player->vect_factor.left = -vect_fl;
+                _player->vect_factor.right = vect_fl;
+                _player->vect_factor.up = -vect_fl;
+                _player->vect_factor.down = vect_fl;
+            }
+            else {
+                DrawLineEx((Vector2){middle_leg.x, middle_leg.y - 3}, middle_leg, 3, EINHEIT);
+
+                if (x_axis_diff < 0) _player->vect_factor.left = 0;
+                if (x_axis_diff > 0) _player->vect_factor.right = 0;
+                if (y_axis_diff < 0) _player->vect_factor.up = 0;
+                if (y_axis_diff > 0) _player->vect_factor.down = -0;
+            }
+        }
+        else if (layer_diff == 1)
+        {
+            if ((IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))
+            && CheckCollisionPointPoly(east_leg, point_arr->array, point_arr->size / sizeof(Vector2))) {
+               _player->offset_z += layer_diff;
+            }
+        }
+        else if (layer_diff == -1)
+        {
+            if ((IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))
+            && CheckCollisionPointPoly(west_leg, point_arr->array, point_arr->size / sizeof(Vector2))) {
                 _player->offset_z += layer_diff;
             }
         }
-        else if (layer_diff == -1) {
-            if (CheckCollisionPointPoly(west_leg, point_arr->array, point_arr->size / sizeof(Vector2))) {
-                _player->offset_z += layer_diff;
-            }
-        }
-
-        // if (layer_diff == 0)
-        // {
-        //     Vector2 *fcenter = &current_fieldset->field_arr[f].center;
-        //     float x_axis_diff = middle_leg.x - fcenter->x;
-        //     float y_axis_diff = middle_leg.y - fcenter->y;
-
-        //     if (CheckCollisionPointPoly(middle_leg, point_arr->array, len)) {
-        //         float VF = cbrtf(_player->speed);
-
-        //         _player->vect_factor.left = -VF;
-        //         _player->vect_factor.right = VF;
-        //         _player->vect_factor.down = VF;
-        //         _player->vect_factor.up = -VF;
-        //     }
-        //     else {
-        //         if (x_axis_diff <= 0) _player->vect_factor.left = 0;
-
-        //         if (x_axis_diff > 0) _player->vect_factor.right = 0;
-
-        //         if (y_axis_diff > 0) _player->vect_factor.down = 0;
-
-        //         if (y_axis_diff <= 0) _player->vect_factor.up = 0;
-        //     }
-        // }
-
     }
 }
 
@@ -173,14 +204,14 @@ void MovePlayer(Player *_player) {
         _player->y_pos += _player->speed * _player->vect_factor.down * GetFrameTime();
     }
     if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) {
-        if (_player->angle < 4.0f) {
-            _player->angle += 3 * GetFrameTime();
+        if (_player->angle < 14.0f) {
+            //_player->angle += 3 * GetFrameTime();
         }
         _player->x_pos += _player->speed * _player->vect_factor.left * GetFrameTime();
     }
     if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) {
-        if (_player->angle > -4.0f) {
-            _player->angle += -3 * GetFrameTime();
+        if (_player->angle > -14.0f) {
+            //_player->angle += -3 * GetFrameTime();
         }
         _player->x_pos += _player->speed * _player->vect_factor.right * GetFrameTime();
     }

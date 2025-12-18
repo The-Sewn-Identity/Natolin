@@ -25,7 +25,7 @@ int main(void) {
         if (launched) {
             BeginTextureMode(playbox.rendertex);
                 ClearBackground(default_fill_color);
-                RenderLevel(*current_tex_cont);
+                NTSK_RenderLevel(*current_tex_cont);
                 UpdatePlayer(&current_player);
                 DrawText(TextFormat("Layer %d", current_player.layer), 10, 0, 10, SLOBODA);
                 DrawText(TextFormat("Vector factor XL, XR: %f, %f", current_player.vect_factor.left, current_player.vect_factor.right), 10, 20, 10, SLOBODA);
@@ -42,6 +42,7 @@ int main(void) {
         
         BeginDrawing();
             ClearBackground(PAXVIRID);
+
             if (launched) {
                 DrawPlaybox();
                 DrawTexturePro(interface.texture,

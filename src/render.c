@@ -94,7 +94,7 @@ void FreeLSLTextCont(LSL_Texture_Container tex_cont) {
     }
 }
 
-void RenderLevel(LSL_Texture_Container tex_cont) {
+void NTSK_RenderLevel(LSL_Texture_Container tex_cont) {
     for (int r=0; r < 16; r++) {
         if (current_player.layer - 1 < r) {
             AnimatePlayer(&current_player);

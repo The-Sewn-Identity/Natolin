@@ -30,7 +30,7 @@ typedef TextureDef LSL_Texture_Container[16][64];
 void CreateTextureDef(TextureDef * texdef, LSL_Object * object, char *levelname);
 void CreateLSLTexCont(LSL_Texture_Container tex_cont, LSL_Layout layout);
 
-void RenderLevel(LSL_Texture_Container tex_cont);
+void NTSK_RenderLevel(LSL_Texture_Container tex_cont);
 void FreeLSLTextCont(LSL_Texture_Container tex_cont);
 
 #endif
